@@ -515,7 +515,7 @@
                     total += price * quantity;
                 });
             }
-            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
+            document.getElementById('calculatedTotal').textContent = total.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0});
         }
 
         function generateInvoice() {
@@ -538,8 +538,8 @@
                 newRow.innerHTML = `
                     <td>${description}</td>
                     <td>${quantity}</td>
-                    <td>₹ ${price.toFixed(0)} /-</td>
-                    <td>₹ ${finalTotal.toFixed(0)} /-</td>
+                    <td>₹ ${price.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0})} /-</td>
+                    <td>₹ ${finalTotal.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0})} /-</td>
                 `;
                 invoiceItemsTable.appendChild(newRow);
 
@@ -556,8 +556,8 @@
                     newRow.innerHTML = `
                         <td>${description}</td>
                         <td>${quantity}</td>
-                        <td>₹ ${price.toFixed(0)} /-</td>
-                        <td>₹ ${itemTotal.toFixed(0)} /-</td>
+                        <td>₹ ${price.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0})} /-</td>
+                        <td>₹ ${itemTotal.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0})} /-</td>
                     `;
                     invoiceItemsTable.appendChild(newRow);
                 });
@@ -574,8 +574,8 @@
                  document.getElementById('displayIssuedDate').textContent = '--/--/----';
             }
 
-            document.getElementById('displaySubtotal').textContent = finalTotal.toFixed(0);
-            document.getElementById('displayFinalTotal').textContent = finalTotal.toFixed(0);
+            document.getElementById('displaySubtotal').textContent = finalTotal.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+            document.getElementById('displayFinalTotal').textContent = finalTotal.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0});
         }
 
         function shareScreenshot() {
