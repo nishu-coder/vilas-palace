@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .input-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 1 1 300px;
+            margin-right: 20px;
+        }
+
+        .input-form h2 {
+            margin-top: 0;
+        }
+
+        .input-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-form input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .total-display {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .input-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .input-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .invoice-container {
+            width: 210mm;
+            min-height: 297mm;
+            background-color: #fff;
+            padding: 20mm;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            box-sizing: border-box;
+            flex: 2 1 500px;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 100px;
+            height: auto;
+        }
+
+        .invoice-title {
+            text-align: right;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #F7931E;
+        }
+
+        .invoice-details {
+            margin-bottom: 20px;
+        }
+
+        .invoice-details p {
+            margin: 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #333;
+            margin: 10px 0;
+        }
+
+        .issued-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .issued-info p {
+            margin: 0;
+        }
+
+        .date-info {
+            text-align: right;
+        }
+
+        .invoice-table {
+            margin-top: 20px;
+            margin-bottom: 50px;
+        }
+
+        .invoice-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .invoice-table th, .invoice-table td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .invoice-table th {
+            background-color: #f2f2f2;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .watermark img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: auto;
+        }
+
+        .payment-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 20px;
+        }
+
+        .payment-summary {
+            flex: 1;
+            text-align: right;
+            margin-right: 20px;
+        }
+
+        .subtotal, .total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .total p {
+            font-size: 1.2em;
+        }
+
+        .bank-details {
+            flex: 1;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9em;
+        }
+
+        .qr-code-section {
+            margin-top: 20px;
+        }
+
+        .qr-code {
+            width: 150px;
+            height: auto;
+        }
+
+        @media print {
+            body {
+                background-color: #fff;
+            }
+            .input-form {
+                display: none;
+            }
+            .invoice-container {
+                box-shadow: none;
+                border: none;
+                margin: 0;
+                width: 100%;
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="input-form">
+            <h2>Enter Details</h2>
+            <label for="invoiceNumber">Invoice Number:</label>
+            <input type="text" id="invoiceNumber" value="118">
+
+            <label for="issuedDate">Issued Date:</label>
+            <input type="date" id="issuedDate" value="2025-07-22">
+
+            <label for="issuedTo">Issued To:</label>
+            <input type="text" id="issuedTo" value="Mr. Himanshu Goswami S/O Mr. Manoj Goswami">
+            
+            <label for="roomPrice">Price (per night):</label>
+            <input type="number" id="roomPrice" value="600">
+            
+            <label for="quantity">Quantity (Nights):</label>
+            <input type="number" id="quantity" value="1">
+            
+            <div class="total-display">
+                <p>Calculated Total: ₹<span id="calculatedTotal">600</span></p>
+            </div>
+            
+            <button onclick="generateInvoice()">Generate & Print Bill</button>
+        </div>
+
+        <div class="invoice-container" id="invoice-bill">
+            <div class="invoice-header">
+                <div class="invoice-logo">
+                    <img src="https://i.ibb.co/L9B13qL/Screenshot-2025-08-17-115223.png" alt="Shree Vilas Palace Guest House Logo" class="logo">
+                </div>
+                <div class="invoice-title">
+                    <p>SHREE VILAS PALACE</p>
+                    <p>GUEST HOUSE</p>
+                </div>
+            </div>
+
+            <div class="invoice-details">
+                <p><strong>INVOICE NO. <span id="displayInvoiceNo">118</span></strong></p>
+                <hr>
+                <div class="issued-info">
+                    <p><strong>ISSUED TO:</strong></p>
+                    <p id="displayIssuedTo">Mr. Himanshu Goswami<br>S/O Mr. Manoj Goswami</p>
+                    <div class="date-info">
+                        <p>Issued Date:</p>
+                        <p id="displayIssuedDate">July, 22 2025</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DESCRIPTION</th>
+                            <th>QTY</th>
+                            <th>PRICE</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Single Room with Double Bed</td>
+                            <td id="displayQty">1</td>
+                            <td id="displayPrice">600</td>
+                            <td id="displayTotal">600</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="watermark">
+                <img src="https://i.ibb.co/6Pqj45m/watermark.png" alt="Shree Vilas Palace Guest House Watermark">
+            </div>
+
+            <div class="payment-section">
+                <div class="payment-summary">
+                    <div class="subtotal">
+                        <p>Subtotal</p>
+                        <p>₹ <span id="displaySubtotal">600</span></p>
+                    </div>
+                    <div class="total">
+                        <p><strong>Total</strong></p>
+                        <p><strong>₹ <span id="displayFinalTotal">600</span>/-</strong></p>
+                    </div>
+                </div>
+
+                <div class="bank-details">
+                    <p><strong>PAYMENT TO:</strong></p>
+                    <p>SBI Bank</p>
+                    <p>Account No. : xxxxxxxx2182</p>
+                    <p>Account Name : Nishant Jaiswal</p>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>A. 12/02 RAJGHAT, VARANASI</p>
+                <p>THANK YOU FOR STAYING !!</p>
+                <div class="qr-code-section">
+                    <img src="https://i.ibb.co/Y2B7bW3/WhatsApp-Image-2025-07-31-at-10-18-23-AM.jpg" alt="PhonePe QR Code" class="qr-code">
+                    <p>Terminal 6-Q670001660</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateInvoice() {
+            const invoiceNumber = document.getElementById('invoiceNumber').value;
+            const issuedDateInput = document.getElementById('issuedDate').value;
+            const issuedTo = document.getElementById('issuedTo').value;
+            const roomPrice = parseFloat(document.getElementById('roomPrice').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            // Calculate total
+            const total = roomPrice * quantity;
+
+            // Update invoice fields
+            document.getElementById('displayInvoiceNo').textContent = invoiceNumber;
+            document.getElementById('displayIssuedTo').textContent = issuedTo;
+            
+            // Format date for display
+            const date = new Date(issuedDateInput);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('displayIssuedDate').textContent = date.toLocaleDateString('en-US', options);
+
+            document.getElementById('displayQty').textContent = quantity;
+            document.getElementById('displayPrice').textContent = roomPrice.toFixed(0);
+            document.getElementById('displayTotal').textContent = total.toFixed(0);
+            document.getElementById('displaySubtotal').textContent = total.toFixed(0);
+            document.getElementById('displayFinalTotal').textContent = total.toFixed(0);
+            
+            // Update calculated total on the form
+            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
+
+            // Trigger print dialog
+            window.print();
+        }
+
+        // Initial calculation on page load
+        window.onload = function() {
+            const roomPrice = parseFloat(document.getElementById('roomPrice').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const total = roomPrice * quantity;
+            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
+        }
+    </script>
+</body>
+</html>
