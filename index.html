@@ -254,7 +254,7 @@
                 <p>Calculated Total: ₹<span id="calculatedTotal">000 /-</span></p>
             </div>
             
-            <button onclick="generateInvoice()">Generate Bill 💰</button>
+            <button onclick="generateInvoice()">Generate Bill 💰</button><br><br>
             <button onclick="shareScreenshot()">Share Screenshot 📷</button>
         </div>
 
@@ -371,17 +371,46 @@
 
             const originalQRDisplay = qrCodeSection.style.display;
             const originalFooterDisplay = footer.style.display;
+
+            // Temporarily hide the QR code and the footer text for a cleaner screenshot
             qrCodeSection.style.display = 'none';
             footer.style.display = 'none';
-            
+
+            // Use a slight delay to ensure the elements are hidden before capture
             setTimeout(() => {
                 html2canvas(invoiceElement).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'invoice.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
+                    // Convert canvas to a Blob object
+                    canvas.toBlob(blob => {
+                        const filesArray = [
+                            new File([blob], 'invoice.png', {
+                                type: 'image/png',
+                                lastModified: new Date().getTime()
+                            })
+                        ];
+                        const shareData = {
+                            files: filesArray,
+                            title: 'Invoice',
+                            text: 'Here is your invoice from Shree Vilas Palace.',
+                        };
+
+                        // Check if the Web Share API is supported
+                        if (navigator.canShare && navigator.canShare(shareData)) {
+                            navigator.share(shareData)
+                                .then(() => console.log('Share successful'))
+                                .catch((error) => console.log('Error sharing:', error));
+                        } else {
+                            // Fallback for browsers that do not support the Web Share API
+                            // This will download the image as before
+                            const link = document.createElement('a');
+                            link.download = 'invoice.png';
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                            console.log('Web Share API not supported, downloading instead.');
+                        }
+                    }, 'image/png');
                 });
-            
+
+                // Restore the hidden elements
                 setTimeout(() => {
                     qrCodeSection.style.display = originalQRDisplay;
                     footer.style.display = originalFooterDisplay;
