@@ -234,22 +234,22 @@
         <div class="input-form">
             <h2>Enter Details</h2>
             <label for="invoiceNumber">Invoice Number:</label>
-            <input type="text" id="invoiceNumber" value="118">
+            <input type="text" id="invoiceNumber" value="XXXX">
 
             <label for="issuedDate">Issued Date:</label>
-            <input type="date" id="issuedDate" value="2025-07-22">
+            <input type="date" id="issuedDate" value="">
 
             <label for="issuedTo">Issued To:</label>
-            <input type="text" id="issuedTo" value="Mr. Himanshu Goswami S/O Mr. Manoj Goswami">
+            <input type="text" id="issuedTo" value="Mr. ">
             
             <label for="roomPrice">Price (per night):</label>
-            <input type="number" id="roomPrice" value="600">
+            <input type="number" id="roomPrice" value="XXX">
             
             <label for="quantity">Quantity (Nights):</label>
             <input type="number" id="quantity" value="1">
             
             <div class="total-display">
-                <p>Calculated Total: ₹<span id="calculatedTotal">600</span></p>
+                <p>Calculated Total: ₹ <span id="calculatedTotal"> </span></p>
             </div>
             
             <button onclick="generateInvoice()">Generate & Print Bill</button>
@@ -258,7 +258,7 @@
         <div class="invoice-container" id="invoice-bill">
             <div class="invoice-header">
                 <div class="invoice-logo">
-                    <img src="https://i.ibb.co/L9B13qL/Screenshot-2025-08-17-115223.png" alt="Shree Vilas Palace Guest House Logo" class="logo">
+                    <img src="Logo.png" alt="Shree Vilas Palace" class="logo">
                 </div>
                 <div class="invoice-title">
                     <p>SHREE VILAS PALACE</p>
@@ -267,14 +267,14 @@
             </div>
 
             <div class="invoice-details">
-                <p><strong>INVOICE NO. <span id="displayInvoiceNo">118</span></strong></p>
+                <p><strong>INVOICE NO: <span id="displayInvoiceNo"></span></strong></p>
                 <hr>
                 <div class="issued-info">
-                    <p><strong>ISSUED TO:</strong></p>
-                    <p id="displayIssuedTo">Mr. Himanshu Goswami<br>S/O Mr. Manoj Goswami</p>
+                    <p><strong>ISSUED TO: </strong></p>
+                    <p id="displayIssuedTo">Mr./ Mrs. </p>
                     <div class="date-info">
                         <p>Issued Date:</p>
-                        <p id="displayIssuedDate">July, 22 2025</p>
+                        <p id="displayIssuedDate"> --/--/---- </p>
                     </div>
                 </div>
             </div>
@@ -293,26 +293,26 @@
                         <tr>
                             <td>Single Room with Double Bed</td>
                             <td id="displayQty">1</td>
-                            <td id="displayPrice">600</td>
-                            <td id="displayTotal">600</td>
+                            <td id="displayPrice">₹ -- /-</td>
+                            <td id="displayTotal">₹ -- /-</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             
             <div class="watermark">
-                <img src="https://i.ibb.co/6Pqj45m/watermark.png" alt="Shree Vilas Palace Guest House Watermark">
+                <img src="Logo.png" alt="Shree Vilas Palace Guest House Watermark">
             </div>
 
             <div class="payment-section">
                 <div class="payment-summary">
                     <div class="subtotal">
                         <p>Subtotal</p>
-                        <p>₹ <span id="displaySubtotal">600</span></p>
+                        <p>₹ <span id="displaySubtotal"></span></p>
                     </div>
                     <div class="total">
                         <p><strong>Total</strong></p>
-                        <p><strong>₹ <span id="displayFinalTotal">600</span>/-</strong></p>
+                        <p><strong>₹ <span id="displayFinalTotal"></span>/-</strong></p>
                     </div>
                 </div>
 
@@ -328,8 +328,8 @@
                 <p>A. 12/02 RAJGHAT, VARANASI</p>
                 <p>THANK YOU FOR STAYING !!</p>
                 <div class="qr-code-section">
-                    <img src="https://i.ibb.co/Y2B7bW3/WhatsApp-Image-2025-07-31-at-10-18-23-AM.jpg" alt="PhonePe QR Code" class="qr-code">
-                    <p>Terminal 6-Q670001660</p>
+                    <img src="QR.jpeg" alt="Payment Code" class="qr-code">
+                    <p>Wishing you a joyfull Experience 😊</p>
                 </div>
             </div>
         </div>
