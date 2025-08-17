@@ -54,6 +54,34 @@
             border-radius: 4px;
         }
 
+        .item-input {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .item-input-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .item-input-group input {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .remove-item {
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: right;
+        }
+
         .total-display {
             margin-top: 20px;
             font-size: 1.2em;
@@ -70,6 +98,7 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 10px;
         }
 
         .input-form button:hover {
@@ -90,7 +119,7 @@
         .invoice-header {
             display: flex;
             justify-content: space-between;
-            align-items: center; /* This centers the items vertically */
+            align-items: center;
             margin-bottom: 20px;
         }
         
@@ -244,17 +273,24 @@
             <label for="issuedTo">Issued To:</label>
             <input type="text" id="issuedTo" placeholder="Mr./ Mrs. ">
             
-            <label for="roomPrice">Price (per night):</label>
-            <input type="number" id="roomPrice" placeholder="₹ 💰💰💰 /-">
+            <div id="items-container">
+                <div class="item-input" data-item-id="1">
+                    <label>Item #1</label>
+                    <input type="text" class="item-description" placeholder="Item Description">
+                    <div class="item-input-group">
+                        <input type="number" class="item-price" placeholder="Price">
+                        <input type="number" class="item-quantity" placeholder="Qty">
+                    </div>
+                </div>
+            </div>
             
-            <label for="quantity">Quantity (Nights):</label>
-            <input type="number" id="quantity" placeholder="1">
-            
+            <button onclick="addItem()">Add Another Item</button>
+
             <div class="total-display">
                 <p>Calculated Total: ₹<span id="calculatedTotal">000 /-</span></p>
             </div>
             
-            <button onclick="generateInvoice()">Generate Bill 💰</button><br><br>
+            <button onclick="generateInvoice()">Generate Bill 💰</button>
             <button onclick="shareScreenshot()">Share Screenshot 📷</button>
         </div>
 
@@ -289,14 +325,8 @@
                             <th>TOTAL</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Single Room with Double Bed</td>
-                            <td id="displayQty">1</td>
-                            <td id="displayPrice">₹ -- /-</td>
-                            <td id="displayTotal">₹ -- /-</td>
-                        </tr>
-                    </tbody>
+                    <tbody id="invoice-items">
+                        </tbody>
                 </table>
             </div>
             
@@ -333,16 +363,82 @@
             </div>
         </div>
     </div>
-
     <script>
+        let itemCounter = 1;
+
+        function addItem() {
+            itemCounter++;
+            const itemsContainer = document.getElementById('items-container');
+            const newItemDiv = document.createElement('div');
+            newItemDiv.className = 'item-input';
+            newItemDiv.dataset.itemId = itemCounter;
+            newItemDiv.innerHTML = `
+                <span class="remove-item" onclick="removeItem(this)">x</span>
+                <label>Item #${itemCounter}</label>
+                <input type="text" class="item-description" placeholder="Item Description">
+                <div class="item-input-group">
+                    <input type="number" class="item-price" placeholder="Price">
+                    <input type="number" class="item-quantity" placeholder="Qty">
+                </div>
+            `;
+            itemsContainer.appendChild(newItemDiv);
+            updateEventListeners();
+        }
+
+        function removeItem(element) {
+            const itemDiv = element.closest('.item-input');
+            itemDiv.remove();
+            updateCalculatedTotal();
+        }
+
+        function updateEventListeners() {
+            const priceInputs = document.querySelectorAll('.item-price');
+            const quantityInputs = document.querySelectorAll('.item-quantity');
+            
+            priceInputs.forEach(input => input.removeEventListener('input', updateCalculatedTotal));
+            quantityInputs.forEach(input => input.removeEventListener('input', updateCalculatedTotal));
+            
+            priceInputs.forEach(input => input.addEventListener('input', updateCalculatedTotal));
+            quantityInputs.forEach(input => input.addEventListener('input', updateCalculatedTotal));
+        }
+
+        function updateCalculatedTotal() {
+            let total = 0;
+            const items = document.querySelectorAll('.item-input');
+            items.forEach(item => {
+                const price = parseFloat(item.querySelector('.item-price').value) || 0;
+                const quantity = parseInt(item.querySelector('.item-quantity').value) || 0;
+                total += price * quantity;
+            });
+            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
+        }
+
         function generateInvoice() {
             const invoiceNumber = document.getElementById('invoiceNumber').value || '';
             const issuedDateInput = document.getElementById('issuedDate').value;
             const issuedTo = document.getElementById('issuedTo').value || '';
-            const roomPrice = parseFloat(document.getElementById('roomPrice').value) || 0;
-            const quantity = parseInt(document.getElementById('quantity').value) || 1;
 
-            const total = roomPrice * quantity;
+            const invoiceItemsTable = document.getElementById('invoice-items');
+            invoiceItemsTable.innerHTML = '';
+            
+            let finalTotal = 0;
+            const items = document.querySelectorAll('.item-input');
+            items.forEach(item => {
+                const description = item.querySelector('.item-description').value || 'Service/Item';
+                const price = parseFloat(item.querySelector('.item-price').value) || 0;
+                const quantity = parseInt(item.querySelector('.item-quantity').value) || 0;
+                const itemTotal = price * quantity;
+                finalTotal += itemTotal;
+
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${description}</td>
+                    <td>${quantity}</td>
+                    <td>₹ ${price.toFixed(0)} /-</td>
+                    <td>₹ ${itemTotal.toFixed(0)} /-</td>
+                `;
+                invoiceItemsTable.appendChild(newRow);
+            });
 
             document.getElementById('displayInvoiceNo').textContent = invoiceNumber;
             document.getElementById('displayIssuedTo').textContent = issuedTo;
@@ -355,13 +451,8 @@
                  document.getElementById('displayIssuedDate').textContent = '--/--/----';
             }
 
-            document.getElementById('displayQty').textContent = quantity;
-            document.getElementById('displayPrice').textContent = `₹ ${roomPrice.toFixed(0)} /-`;
-            document.getElementById('displayTotal').textContent = `₹ ${total.toFixed(0)} /-`;
-            document.getElementById('displaySubtotal').textContent = total.toFixed(0);
-            document.getElementById('displayFinalTotal').textContent = total.toFixed(0);
-            
-            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
+            document.getElementById('displaySubtotal').textContent = finalTotal.toFixed(0);
+            document.getElementById('displayFinalTotal').textContent = finalTotal.toFixed(0);
         }
 
         function shareScreenshot() {
@@ -369,16 +460,12 @@
             const qrCodeSection = invoiceElement.querySelector('.qr-code-section');
             const footer = invoiceElement.querySelector('.footer');
 
-            // Temporarily save the original display style of the QR code section
             const originalQRDisplay = qrCodeSection.style.display;
 
-            // Hide only the QR code section, not the entire footer
             qrCodeSection.style.display = 'none';
 
-            // Use a slight delay to ensure the elements are hidden before capture
             setTimeout(() => {
                 html2canvas(invoiceElement).then(canvas => {
-                    // Check if the Web Share API is supported
                     if (navigator.canShare) {
                         canvas.toBlob(blob => {
                             const filesArray = [
@@ -397,7 +484,6 @@
                                 .catch((error) => console.log('Error sharing:', error));
                         }, 'image/png');
                     } else {
-                        // Fallback for browsers that do not support the Web Share API
                         const link = document.createElement('a');
                         link.download = 'invoice.png';
                         link.href = canvas.toDataURL('image/png');
@@ -406,7 +492,6 @@
                     }
                 });
 
-                // Restore the QR code section after a short delay
                 setTimeout(() => {
                     qrCodeSection.style.display = originalQRDisplay;
                 }, 500);
@@ -414,17 +499,8 @@
             }, 100);
         }
 
-        document.getElementById('roomPrice').addEventListener('input', updateCalculatedTotal);
-        document.getElementById('quantity').addEventListener('input', updateCalculatedTotal);
-
-        function updateCalculatedTotal() {
-            const roomPrice = parseFloat(document.getElementById('roomPrice').value) || 0;
-            const quantity = parseInt(document.getElementById('quantity').value) || 0;
-            const total = roomPrice * quantity;
-            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
-        }
-
         window.onload = function() {
+            updateEventListeners();
             updateCalculatedTotal();
         }
     </script>
