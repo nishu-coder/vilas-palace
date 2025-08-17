@@ -88,20 +88,19 @@
         .invoice-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 20px;
+        }
+        
+        .invoice-header .logo-container {
+            width: 100px;
         }
 
         .logo {
-            width: 100px;
+            width: 100%;
             height: auto;
-        }
-
-        .invoice-title {
-            text-align: right;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #F7931E;
+            display: block;
+            margin-left: auto;
         }
 
         .invoice-details {
@@ -124,11 +123,11 @@
             align-items: flex-start;
         }
 
-        .issued-info p {
-            margin: 0;
+        .issued-info .issued-to-details {
+            flex-grow: 1;
         }
-
-        .date-info {
+        
+        .issued-info .date-info {
             text-align: right;
         }
 
@@ -177,9 +176,10 @@
         }
 
         .payment-summary {
-            flex: 1;
+            flex-basis: 35%;
             text-align: right;
-            margin-right: 20px;
+            border-left: 1px solid #ddd;
+            padding-left: 20px;
         }
 
         .subtotal, .total {
@@ -193,7 +193,7 @@
         }
 
         .bank-details {
-            flex: 1;
+            flex-basis: 60%;
         }
 
         .footer {
@@ -237,41 +237,42 @@
             <input type="text" id="invoiceNumber" placeholder="00001">
 
             <label for="issuedDate">Issued Date:</label>
-            <input type="date" id="issuedDate" value="">
+            <input type="date" id="issuedDate">
 
             <label for="issuedTo">Issued To:</label>
-            <input type="text" id="issuedTo" value="Mr./ Mrs ">
+            <input type="text" id="issuedTo" placeholder="Mr./ Mrs. ">
             
             <label for="roomPrice">Price (per night):</label>
-            <input type="number" id="roomPrice" placeholder="₹ XXX /-">
+            <input type="number" id="roomPrice" placeholder="₹ 💰💰💰 /-">
             
             <label for="quantity">Quantity (Nights):</label>
             <input type="number" id="quantity" value="1">
             
             <div class="total-display">
-                <p>Calculated Total: ₹ <span id="calculatedTotal"> </span></p>
+                <p>Calculated Total: ₹<span id="calculatedTotal"></span></p>
             </div>
             
-            <button onclick="generateInvoice()">Generate & Print Bill</button>
+            <button onclick="generateInvoice()">Generate Bill 💰</button>
         </div>
 
         <div class="invoice-container" id="invoice-bill">
             <div class="invoice-header">
-                <div class="invoice-logo">
+                <p>INVOICE NO. <span id="displayInvoiceNo"></span></p>
+                <div class="logo-container">
                     <img src="Logo.png" alt="Shree Vilas Palace" class="logo">
                 </div>
             </div>
 
-            <div class="invoice-details">
-                <p><strong>INVOICE NO: <span id="displayInvoiceNo"></span></strong></p>
-                <hr>
-                <div class="issued-info">
+            <hr>
+
+            <div class="issued-info">
+                <div class="issued-to-details">
                     <p><strong>ISSUED TO: </strong></p><br>
-                    <p id="displayIssuedTo"> </p>
-                    <div class="date-info">
-                        <p>Issued Date:</p>
-                        <p id="displayIssuedDate"> --/--/---- </p>
-                    </div>
+                    <p id="displayIssuedTo"></p>
+                </div>
+                <div class="date-info">
+                    <p><strong>Issued Date:</strong></p>
+                    <p id="displayIssuedDate">--/--/----</p>
                 </div>
             </div>
 
@@ -297,10 +298,17 @@
             </div>
             
             <div class="watermark">
-                <img src="Logo.png" alt="Shree Vilas Palace Guest House Watermark">
+                <img src="Logo.png" alt="Shree Vilas Palace">
             </div>
-<br><br><br><br><br><br>
+            <br><br><br><br><br><br><br><br>
+
             <div class="payment-section">
+                <div class="bank-details">
+                    <p><strong>PAYMENT TO:</strong></p>
+                    <p>SBI Bank</p>
+                    <p><strong>Account No. :</strong> xxxxxxxx2182</p>
+                    <p><strong>Account Name :</strong> Nishant Jaiswal</p>
+                </div>
                 <div class="payment-summary">
                     <div class="subtotal">
                         <p>Subtotal</p>
@@ -311,17 +319,10 @@
                         <p><strong>₹ <span id="displayFinalTotal"></span>/-</strong></p>
                     </div>
                 </div>
-
-                <div class="bank-details">
-                    <p><strong>PAYMENT TO:</strong></p>
-                    <p>SBI Bank</p>
-                    <p>Account No. : xxxxxxxx2182</p>
-                    <p>Account Name : Nishant Jaiswal</p>
-                </div>
             </div>
 
             <div class="footer">
-                <p><strong>A. 12/02 RAJGHAT, VARANASI</strong>strong></p><br><br><br>
+                <p><strong>A. 12/02 RAJGHAT, VARANASI</strong></p><br><br><br>
                 <div class="qr-code-section">
                     <img src="QR.jpeg" alt="Payment Code" class="qr-code">
                     <p>Wishing you a joyfull Experience 😊</p>
@@ -351,8 +352,8 @@
             document.getElementById('displayIssuedDate').textContent = date.toLocaleDateString('en-US', options);
 
             document.getElementById('displayQty').textContent = quantity;
-            document.getElementById('displayPrice').textContent = roomPrice.toFixed(0);
-            document.getElementById('displayTotal').textContent = total.toFixed(0);
+            document.getElementById('displayPrice').textContent = `₹ ${roomPrice.toFixed(0)} /-`;
+            document.getElementById('displayTotal').textContent = `₹ ${total.toFixed(0)} /-`;
             document.getElementById('displaySubtotal').textContent = total.toFixed(0);
             document.getElementById('displayFinalTotal').textContent = total.toFixed(0);
             
@@ -363,12 +364,20 @@
             window.print();
         }
 
-        // Initial calculation on page load
-        window.onload = function() {
-            const roomPrice = parseFloat(document.getElementById('roomPrice').value);
-            const quantity = parseInt(document.getElementById('quantity').value);
+        // Add event listeners to input fields for real-time calculation
+        document.getElementById('roomPrice').addEventListener('input', updateCalculatedTotal);
+        document.getElementById('quantity').addEventListener('input', updateCalculatedTotal);
+
+        function updateCalculatedTotal() {
+            const roomPrice = parseFloat(document.getElementById('roomPrice').value) || 0;
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
             const total = roomPrice * quantity;
             document.getElementById('calculatedTotal').textContent = total.toFixed(0);
+        }
+
+        // Initial calculation on page load
+        window.onload = function() {
+            updateCalculatedTotal();
         }
     </script>
 </body>
