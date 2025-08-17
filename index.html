@@ -445,163 +445,188 @@
         </div>
     </div>
     <script>
-        let a = 0;
-        let b = true;
+        let itemCounter = 0;
+        let isDefaultMode = true;
 
-        function c(d) {
-            const e = document.getElementById('default-item-container');
-            const f = document.getElementById('items-container');
-            const g = document.getElementById('icon-group');
-            const h = document.getElementById('addItemBtn');
+        function toggleItemInput(type) {
+            const defaultContainer = document.getElementById('default-item-container');
+            const itemsContainer = document.getElementById('items-container');
+            const iconGroup = document.getElementById('icon-group');
+            const addItemBtn = document.getElementById('addItemBtn');
 
-            if (d === 'multiple' || (d === 'toggle' && b)) {
-                b = false;
-                e.style.display = 'none';
-                f.style.display = 'block';
-                g.style.display = 'flex';
-                h.classList.add('rotate-icon');
-                if (f.children.length === 0) {
-                    i();
+            if (type === 'toggle') {
+                if (isDefaultMode) {
+                    isDefaultMode = false;
+                    defaultContainer.style.display = 'none';
+                    itemsContainer.style.display = 'block';
+                    iconGroup.style.display = 'flex';
+                    addItemBtn.classList.add('rotate-icon');
                 }
-            } else if (d === 'default' || (d === 'toggle' && !b)) {
-                b = true;
-                e.style.display = 'block';
-                f.style.display = 'none';
-                f.innerHTML = '';
-                g.style.display = 'none';
-                h.classList.remove('rotate-icon');
-                a = 0;
+                addItem();
+            } else if (type === 'default') {
+                isDefaultMode = true;
+                defaultContainer.style.display = 'block';
+                itemsContainer.style.display = 'none';
+                itemsContainer.innerHTML = '';
+                iconGroup.style.display = 'none';
+                addItemBtn.classList.remove('rotate-icon');
+                itemCounter = 0;
             }
-            k();
+            updateCalculatedTotal();
         }
 
-        function i() {
-            a++;
-            const d = document.getElementById('items-container');
-            const e = document.createElement('div');
-            e.className = 'item-input';
-            e.dataset.itemId = a;
-            e.innerHTML = `<span class="remove-item" onclick="j(this)">x</span><label>Item #${a}</label><input type="text" class="item-description" placeholder="Item Description"><div class="item-input-group"><input type="number" class="item-price" placeholder="Price"><input type="number" class="item-quantity" placeholder="Qty"></div>`;
-            d.appendChild(e);
-            document.querySelectorAll('.item-price, .item-quantity').forEach(l => {
-                l.addEventListener('input', k);
+        function addItem() {
+            itemCounter++;
+            const itemsContainer = document.getElementById('items-container');
+            const newItemDiv = document.createElement('div');
+            newItemDiv.className = 'item-input';
+            newItemDiv.dataset.itemId = itemCounter;
+            newItemDiv.innerHTML = `
+                <span class="remove-item" onclick="removeItem(this)">x</span>
+                <label>Item #${itemCounter}</label>
+                <input type="text" class="item-description" placeholder="Item Description">
+                <div class="item-input-group">
+                    <input type="number" class="item-price" placeholder="Price">
+                    <input type="number" class="item-quantity" placeholder="Qty">
+                </div>
+            `;
+            itemsContainer.appendChild(newItemDiv);
+            document.querySelectorAll('.item-price, .item-quantity').forEach(input => {
+                input.addEventListener('input', updateCalculatedTotal);
             });
         }
 
-        function j(d) {
-            d.closest('.item-input').remove();
-            k();
+        function removeItem(element) {
+            element.closest('.item-input').remove();
+            updateCalculatedTotal();
         }
 
-        function k() {
-            let c = 0;
-            if (b) {
-                const a = parseFloat(document.getElementById('defaultRoomPrice').value) || 0;
-                const d = parseInt(document.getElementById('defaultQuantity').value) || 0;
-                c = a * d;
+        function updateCalculatedTotal() {
+            let total = 0;
+            if (isDefaultMode) {
+                const price = parseFloat(document.getElementById('defaultRoomPrice').value) || 0;
+                const quantity = parseInt(document.getElementById('defaultQuantity').value) || 0;
+                total = price * quantity;
             } else {
-                const a = document.querySelectorAll('.item-input');
-                a.forEach(a => {
-                    const d = parseFloat(a.querySelector('.item-price').value) || 0;
-                    const e = parseInt(a.querySelector('.item-quantity').value) || 0;
-                    c += d * e;
+                const items = document.querySelectorAll('.item-input');
+                items.forEach(item => {
+                    const price = parseFloat(item.querySelector('.item-price').value) || 0;
+                    const quantity = parseInt(item.querySelector('.item-quantity').value) || 0;
+                    total += price * quantity;
                 });
             }
-            document.getElementById('calculatedTotal').textContent = c.toFixed(0);
+            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
         }
 
-        function l() {
-            const c = document.getElementById('invoiceNumber').value || '';
-            const e = document.getElementById('issuedDate').value;
-            const f = document.getElementById('issuedTo').value || '';
-            const g = document.getElementById('invoice-items');
-            g.innerHTML = '';
-            let h = 0;
-            if (b) {
-                const a = 'Specious Room (2X Beds)';
-                const d = parseFloat(document.getElementById('defaultRoomPrice').value) || 0;
-                const e = parseInt(document.getElementById('defaultQuantity').value) || 0;
-                h = d * e;
-                const c = document.createElement('tr');
-                c.innerHTML = `<td>${a}</td><td>${e}</td><td>₹ ${d.toFixed(0)} /-</td><td>₹ ${h.toFixed(0)} /-</td>`;
-                g.appendChild(c);
+        function generateInvoice() {
+            const invoiceNumber = document.getElementById('invoiceNumber').value || '';
+            const issuedDateInput = document.getElementById('issuedDate').value;
+            const issuedTo = document.getElementById('issuedTo').value || '';
+
+            const invoiceItemsTable = document.getElementById('invoice-items');
+            invoiceItemsTable.innerHTML = '';
+            
+            let finalTotal = 0;
+
+            if (isDefaultMode) {
+                const description = "Specious Room (2X Beds)";
+                const price = parseFloat(document.getElementById('defaultRoomPrice').value) || 0;
+                const quantity = parseInt(document.getElementById('defaultQuantity').value) || 0;
+                finalTotal = price * quantity;
+
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${description}</td>
+                    <td>${quantity}</td>
+                    <td>₹ ${price.toFixed(0)} /-</td>
+                    <td>₹ ${finalTotal.toFixed(0)} /-</td>
+                `;
+                invoiceItemsTable.appendChild(newRow);
+
             } else {
-                const c = document.querySelectorAll('.item-input');
-                c.forEach(a => {
-                    const b = a.querySelector('.item-description').value || 'Service/Item';
-                    const c = parseFloat(a.querySelector('.item-price').value) || 0;
-                    const d = parseInt(a.querySelector('.item-quantity').value) || 0;
-                    const e = c * d;
-                    h += e;
-                    const f = document.createElement('tr');
-                    f.innerHTML = `<td>${b}</td><td>${d}</td><td>₹ ${c.toFixed(0)} /-</td><td>₹ ${e.toFixed(0)} /-</td>`;
-                    g.appendChild(f);
+                const items = document.querySelectorAll('.item-input');
+                items.forEach(item => {
+                    const description = item.querySelector('.item-description').value || 'Service/Item';
+                    const price = parseFloat(item.querySelector('.item-price').value) || 0;
+                    const quantity = parseInt(item.querySelector('.item-quantity').value) || 0;
+                    const itemTotal = price * quantity;
+                    finalTotal += itemTotal;
+
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${description}</td>
+                        <td>${quantity}</td>
+                        <td>₹ ${price.toFixed(0)} /-</td>
+                        <td>₹ ${itemTotal.toFixed(0)} /-</td>
+                    `;
+                    invoiceItemsTable.appendChild(newRow);
                 });
             }
-            document.getElementById('displayInvoiceNo').textContent = c;
-            document.getElementById('displayIssuedTo').textContent = f;
-            if (e) {
-                const a = new Date(e);
-                document.getElementById('displayIssuedDate').textContent = a.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
+
+            document.getElementById('displayInvoiceNo').textContent = invoiceNumber;
+            document.getElementById('displayIssuedTo').textContent = issuedTo;
+            
+            if (issuedDateInput) {
+                const date = new Date(issuedDateInput);
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('displayIssuedDate').textContent = date.toLocaleDateString('en-US', options);
             } else {
-                document.getElementById('displayIssuedDate').textContent = '--/--/----';
+                 document.getElementById('displayIssuedDate').textContent = '--/--/----';
             }
-            document.getElementById('displaySubtotal').textContent = h.toFixed(0);
-            document.getElementById('displayFinalTotal').textContent = h.toFixed(0);
+
+            document.getElementById('displaySubtotal').textContent = finalTotal.toFixed(0);
+            document.getElementById('displayFinalTotal').textContent = finalTotal.toFixed(0);
         }
 
-        function m() {
-            const a = document.getElementById('invoice-bill');
-            const b = a.querySelector('.qr-code-section');
-            const d = b.style.display;
-            b.style.display = 'none';
+        function shareScreenshot() {
+            const invoiceElement = document.getElementById('invoice-bill');
+            const qrCodeSection = invoiceElement.querySelector('.qr-code-section');
+            
+            const originalQRDisplay = qrCodeSection.style.display;
+
+            qrCodeSection.style.display = 'none';
 
             setTimeout(() => {
-                html2canvas(a, {
-                    scale: 2
-                }).then(a => {
-                    if (navigator.canShare && navigator.canShare({
-                            files: [new File([''], 'invoice.png', {
-                                type: 'image/png'
-                            })]
-                        })) {
-                        a.toBlob(c => {
-                            const d = [new File([c], 'invoice.png', {
-                                type: 'image/png',
-                                lastModified: new Date().getTime()
-                            })];
-                            const e = {
-                                files: d,
+                html2canvas(invoiceElement, { scale: 2 }).then(canvas => {
+                    if (navigator.canShare && navigator.canShare({ files: [new File([''], 'invoice.png', { type: 'image/png' })] })) {
+                        canvas.toBlob(blob => {
+                            const filesArray = [
+                                new File([blob], 'invoice.png', {
+                                    type: 'image/png',
+                                    lastModified: new Date().getTime()
+                                })
+                            ];
+                            const shareData = {
+                                files: filesArray,
                                 title: 'Invoice',
-                                text: 'Here is your invoice from Shree Vilas Palace.'
+                                text: 'Here is your invoice from Shree Vilas Palace.',
                             };
-                            navigator.share(e).then(() => console.log('Share successful')).catch(a => console.log('Error sharing:', a));
+                            navigator.share(shareData)
+                                .then(() => console.log('Share successful'))
+                                .catch((error) => console.log('Error sharing:', error));
                         }, 'image/png');
                     } else {
-                        const b = document.createElement('a');
-                        b.download = 'invoice.png';
-                        b.href = a.toDataURL('image/png');
-                        b.click();
+                        const link = document.createElement('a');
+                        link.download = 'invoice.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
                         console.log('Web Share API not supported, downloading instead.');
                     }
                 });
-            }, 100);
 
-            setTimeout(() => {
-                b.style.display = d;
-            }, 500);
+                setTimeout(() => {
+                    qrCodeSection.style.display = originalQRDisplay;
+                }, 500);
+
+            }, 100);
         }
 
         window.onload = function() {
-            c('default');
+            toggleItemInput('default');
             document.getElementById('defaultQuantity').value = 1;
-            document.getElementById('defaultRoomPrice').addEventListener('input', k);
-            document.getElementById('defaultQuantity').addEventListener('input', k);
-        };
+            document.getElementById('defaultRoomPrice').addEventListener('input', updateCalculatedTotal);
+            document.getElementById('defaultQuantity').addEventListener('input', updateCalculatedTotal);
+        }
     </script>
 </body>
 </html>
