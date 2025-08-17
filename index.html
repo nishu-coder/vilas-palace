@@ -114,8 +114,8 @@
         
         #addItemBtn {
             font-size: 2em;
-            width: 50px;
-            height: 50px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             padding: 0;
             margin: 10px auto;
@@ -127,8 +127,8 @@
         }
 
         .icon-btn {
-            width: 50px;
-            height: 50px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             padding: 0;
             display: flex;
@@ -148,9 +148,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-left: auto;
         }
-
+        
+        .icon-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
         .invoice-container {
             width: 210mm;
             min-height: 297mm;
@@ -318,10 +326,6 @@
 
             <label for="issuedTo">Issued To:</label>
             <input type="text" id="issuedTo" placeholder="Mr./ Mrs. ">
-            
-            <button id="editBtn" onclick="toggleItemInput('default')" style="display: none;">
-                <i class="fas fa-trash-alt"></i>
-            </button>
 
             <div id="default-item-container">
                 <label for="defaultRoomPrice">Price (per night):</label>
@@ -334,16 +338,21 @@
             <div id="items-container" style="display: none;">
                 </div>
             
-            <button id="addItemBtn" onclick="toggleItemInput('toggle')">+</button>
+            <div id="icon-group" class="icon-group" style="display: none;">
+                <button id="addItemBtn" onclick="toggleItemInput('toggle')">+</button>
+                <button id="editBtn" onclick="toggleItemInput('default')">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button class="icon-btn" onclick="shareScreenshot()">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+            </div>
 
             <div class="total-display">
                 <p>Calculated Total: ₹<span id="calculatedTotal">000 /-</span></p>
             </div>
             
             <button onclick="generateInvoice()">Generate Bill 💰</button>
-            <button class="icon-btn" onclick="shareScreenshot()">
-                <i class="fas fa-share-alt"></i>
-            </button>
         </div>
 
         <div class="invoice-container" id="invoice-bill">
@@ -407,11 +416,12 @@
             </div>
 
             <div class="footer">
-                <p><strong>A. 12/02 RAJGHAT, VARANASI</strong></p><br><br><br>
-                <div class="qr-code-section">
-                    <img src="QR.jpeg" alt="Payment Code" class="qr-code">
-                    <p>Wishing you a joyfull Experience 😊</p>
-                </div>
+                <p><strong>A. 12/02 RAJGHAT, VARANASI</strong></p>
+                <p><strong>Wishing you a joyfull Experience 😊</strong></p>
+            </div>
+                <br><br><br>
+            <div class="qr-code-section">
+                <img src="QR.jpeg" alt="Payment Code" class="qr-code">
             </div>
         </div>
     </div>
@@ -422,15 +432,14 @@
         function toggleItemInput(type) {
             const defaultContainer = document.getElementById('default-item-container');
             const itemsContainer = document.getElementById('items-container');
+            const iconGroup = document.getElementById('icon-group');
             const addItemBtn = document.getElementById('addItemBtn');
-            const editBtn = document.getElementById('editBtn');
 
             if (type === 'multiple' || (type === 'toggle' && isDefaultMode)) {
                 isDefaultMode = false;
                 defaultContainer.style.display = 'none';
                 itemsContainer.style.display = 'block';
-                editBtn.style.display = 'block';
-                addItemBtn.style.display = 'block';
+                iconGroup.style.display = 'flex';
                 addItemBtn.classList.add('rotate-icon');
                 if (itemsContainer.children.length === 0) {
                     addItem();
@@ -440,7 +449,7 @@
                 defaultContainer.style.display = 'block';
                 itemsContainer.style.display = 'none';
                 itemsContainer.innerHTML = '';
-                editBtn.style.display = 'none';
+                iconGroup.style.display = 'none';
                 addItemBtn.classList.remove('rotate-icon');
                 itemCounter = 0;
             }
