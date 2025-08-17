@@ -136,6 +136,21 @@
             align-items: center;
         }
 
+        #editBtn {
+            width: 30px;
+            height: 30px;
+            font-size: 1em;
+            padding: 0;
+            border-radius: 50%;
+            background-color: #A32B2B;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: auto;
+        }
+
         .invoice-container {
             width: 210mm;
             min-height: 297mm;
@@ -427,6 +442,7 @@
                 itemsContainer.innerHTML = '';
                 editBtn.style.display = 'none';
                 addItemBtn.classList.remove('rotate-icon');
+                itemCounter = 0;
             }
             updateCalculatedTotal();
         }
@@ -580,6 +596,9 @@
 
         window.onload = function() {
             toggleItemInput('default');
+            document.getElementById('defaultQuantity').value = 1;
+            document.getElementById('defaultRoomPrice').addEventListener('input', updateCalculatedTotal);
+            document.getElementById('defaultQuantity').addEventListener('input', updateCalculatedTotal);
         }
     </script>
 </body>
