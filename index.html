@@ -87,7 +87,7 @@
             margin-top: 20px;
             font-size: 1.2em;
             font-weight: bold;
-            text-align: center; /* Centered "Calculated Total" */
+            text-align: center;
         }
 
         .input-form button {
@@ -304,7 +304,9 @@
             <label for="issuedTo">Issued To:</label>
             <input type="text" id="issuedTo" placeholder="Mr./ Mrs. ">
             
-            <button id="editBtn" onclick="toggleItemInput('multiple')">Edit Multiple Items</button>
+            <button id="editBtn" onclick="toggleItemInput('default')" style="display: none;">
+                <i class="fas fa-trash-alt"></i>
+            </button>
 
             <div id="default-item-container">
                 <label for="defaultRoomPrice">Price (per night):</label>
@@ -408,36 +410,23 @@
             const addItemBtn = document.getElementById('addItemBtn');
             const editBtn = document.getElementById('editBtn');
 
-            if (type === 'multiple') {
+            if (type === 'multiple' || (type === 'toggle' && isDefaultMode)) {
                 isDefaultMode = false;
                 defaultContainer.style.display = 'none';
                 itemsContainer.style.display = 'block';
+                editBtn.style.display = 'block';
                 addItemBtn.style.display = 'block';
-                editBtn.style.display = 'none';
                 addItemBtn.classList.add('rotate-icon');
                 if (itemsContainer.children.length === 0) {
                     addItem();
                 }
-            } else if (type === 'toggle') {
-                if (isDefaultMode) {
-                    // Switch to multiple items mode
-                    isDefaultMode = false;
-                    defaultContainer.style.display = 'none';
-                    itemsContainer.style.display = 'block';
-                    addItemBtn.classList.add('rotate-icon');
-                    editBtn.style.display = 'none';
-                    if (itemsContainer.children.length === 0) {
-                        addItem();
-                    }
-                } else {
-                    // Switch back to default mode
-                    isDefaultMode = true;
-                    defaultContainer.style.display = 'block';
-                    itemsContainer.style.display = 'none';
-                    itemsContainer.innerHTML = '';
-                    addItemBtn.classList.remove('rotate-icon');
-                    editBtn.style.display = 'block';
-                }
+            } else if (type === 'default' || (type === 'toggle' && !isDefaultMode)) {
+                isDefaultMode = true;
+                defaultContainer.style.display = 'block';
+                itemsContainer.style.display = 'none';
+                itemsContainer.innerHTML = '';
+                editBtn.style.display = 'none';
+                addItemBtn.classList.remove('rotate-icon');
             }
             updateCalculatedTotal();
         }
@@ -458,29 +447,15 @@
                 </div>
             `;
             itemsContainer.appendChild(newItemDiv);
-            updateEventListeners();
+            document.querySelectorAll('.item-price, .item-quantity').forEach(input => {
+                input.addEventListener('input', updateCalculatedTotal);
+            });
         }
 
         function removeItem(element) {
             const itemDiv = element.closest('.item-input');
             itemDiv.remove();
             updateCalculatedTotal();
-        }
-
-        function updateDefaultEventListeners() {
-            const priceInput = document.getElementById('defaultRoomPrice');
-            const quantityInput = document.getElementById('defaultQuantity');
-            
-            priceInput.addEventListener('input', updateCalculatedTotal);
-            quantityInput.addEventListener('input', updateCalculatedTotal);
-        }
-
-        function updateEventListeners() {
-            const priceInputs = document.querySelectorAll('.item-price');
-            const quantityInputs = document.querySelectorAll('.item-quantity');
-            
-            priceInputs.forEach(input => input.addEventListener('input', updateCalculatedTotal));
-            quantityInputs.forEach(input => input.addEventListener('input', updateCalculatedTotal));
         }
 
         function updateCalculatedTotal() {
