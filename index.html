@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Generator</title>
-    <link rel="icon" type="image/x-icon" href="Logo1.jpg">
+    <link rel="icon" type="image/x-icon" href="Logo.png">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -165,12 +165,12 @@
             transform: scale(1.1);
         }
 
-        .share-btn {
+        .print-btn {
             background: linear-gradient(45deg, #5bc0de, #31b0d5);
             color: white;
         }
 
-        .share-btn:hover {
+        .print-btn:hover {
             background: linear-gradient(45deg, #31b0d5, #2a96b2);
             transform: translateY(-2px);
         }
@@ -363,8 +363,8 @@
                     </button>
                 </div>
                 <button id="addItemBtn" onclick="toggleItemInput('toggle')">+</button>
-                <button class="share-btn" onclick="shareScreenshot()">
-                    <i class="fas fa-share-alt"></i>
+                <button class="print-btn" onclick="window.print()">
+                    <i class="fas fa-print"></i>
                 </button>
             </div>
 
@@ -576,51 +576,6 @@
 
             document.getElementById('displaySubtotal').textContent = finalTotal.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0});
             document.getElementById('displayFinalTotal').textContent = finalTotal.toLocaleString('en-IN', {minimumFractionDigits: 0, maximumFractionDigits: 0});
-        }
-
-        function shareScreenshot() {
-            const invoiceElement = document.getElementById('invoice-bill');
-            const qrCodeSection = invoiceElement.querySelector('.qr-code-section');
-            
-            const originalQRDisplay = qrCodeSection.style.display;
-            qrCodeSection.style.display = 'none';
-
-            // Wait a moment for the QR code to hide, then take the screenshot
-            setTimeout(() => {
-                html2canvas(invoiceElement, { scale: 2 }).then(canvas => {
-                    canvas.toBlob(blob => {
-                        const filesArray = [
-                            new File([blob], 'invoice.png', {
-                                type: 'image/png',
-                                lastModified: new Date().getTime()
-                            })
-                        ];
-                        if (navigator.canShare && navigator.canShare({ files: filesArray })) {
-                            const shareData = {
-                                files: filesArray,
-                                title: 'Invoice',
-                                text: 'Here is your invoice from Shree Vilas Palace.',
-                            };
-                            navigator.share(shareData)
-                                .then(() => console.log('Share successful'))
-                                .catch((error) => console.log('Error sharing:', error));
-                        } else {
-                            // Fallback for browsers that don't support file sharing
-                            const link = document.createElement('a');
-                            link.download = 'invoice.png';
-                            link.href = canvas.toDataURL('image/png');
-                            link.click();
-                            console.log('Web Share API not supported, downloading instead.');
-                        }
-                    }, 'image/png');
-                });
-                
-                // Restore the QR code section after a short delay
-                setTimeout(() => {
-                    qrCodeSection.style.display = originalQRDisplay;
-                }, 500);
-
-            }, 100);
         }
 
         window.onload = function() {
