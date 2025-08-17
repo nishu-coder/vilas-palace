@@ -129,29 +129,17 @@
             transform: translateY(-2px);
         }
 
-        #addItemBtn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 2em;
-            padding: 0;
-            display: block;
-            margin: 15px auto;
-            background: linear-gradient(45deg, #5cb85c, #4cae4c);
-            color: white;
-            transition: transform 0.3s ease;
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
         }
 
-        #addItemBtn:hover {
-            transform: scale(1.1) rotate(90deg);
-            background: linear-gradient(45deg, #4cae4c, #449d44);
-        }
-
-        .rotate-icon {
-            transform: rotate(45deg);
-        }
-
-        .icon-btn {
+        #addItemBtn,
+        .share-btn,
+        #editBtn {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -159,53 +147,44 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(45deg, #5bc0de, #31b0d5);
-            color: white;
+            border: none;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
-        
-        .icon-btn:hover {
-            background: linear-gradient(45deg, #31b0d5, #2a96b2);
-            transform: translateY(-2px);
-        }
 
-        #editBtn {
-            font-size: 1em;
-            background: linear-gradient(45deg, #f0ad4e, #ec971f);
+        #addItemBtn {
+            font-size: 2em;
+            background: linear-gradient(45deg, #5cb85c, #4cae4c);
             color: white;
         }
 
-        #editBtn:hover {
-            background: linear-gradient(45deg, #ec971f, #d58512);
+        #addItemBtn.rotate-icon {
+            transform: rotate(45deg);
+        }
+        
+        #addItemBtn:hover {
+            background: linear-gradient(45deg, #4cae4c, #449d44);
+            transform: scale(1.1);
         }
 
         .share-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 10px;
-            margin-right: 10px;
             background: linear-gradient(45deg, #5bc0de, #31b0d5);
             color: white;
-            transition: all 0.3s ease;
         }
 
         .share-btn:hover {
             background: linear-gradient(45deg, #31b0d5, #2a96b2);
             transform: translateY(-2px);
         }
-        
-        .icon-group {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-            margin-bottom: 10px;
+
+        #editBtn {
+            background: linear-gradient(45deg, #f0ad4e, #ec971f);
+            color: white;
+        }
+
+        #editBtn:hover {
+            background: linear-gradient(45deg, #ec971f, #d58512);
+            transform: translateY(-2px);
         }
         
         .invoice-container {
@@ -379,15 +358,13 @@
 
             <div id="items-container" style="display: none;"></div>
             
-            <button id="addItemBtn" onclick="toggleItemInput('toggle')">+</button>
-
-            <div id="icon-group" class="icon-group" style="display: none;">
-                <button id="editBtn" class="icon-btn" onclick="toggleItemInput('default')">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-            
-            <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px;">
+            <div class="action-buttons">
+                <div id="icon-group" class="icon-group" style="display: none;">
+                    <button id="editBtn" onclick="toggleItemInput('default')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                <button id="addItemBtn" onclick="toggleItemInput('toggle')">+</button>
                 <button class="share-btn" onclick="shareScreenshot()">
                     <i class="fas fa-share-alt"></i>
                 </button>
