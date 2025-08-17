@@ -234,16 +234,16 @@
         <div class="input-form">
             <h2>Enter Details</h2>
             <label for="invoiceNumber">Invoice Number:</label>
-            <input type="text" id="invoiceNumber" value="XXXX">
+            <input type="text" id="invoiceNumber" placeholder="00001">
 
             <label for="issuedDate">Issued Date:</label>
             <input type="date" id="issuedDate" value="">
 
             <label for="issuedTo">Issued To:</label>
-            <input type="text" id="issuedTo" value="Mr. ">
+            <input type="text" id="issuedTo" value="Mr./ Mrs ">
             
             <label for="roomPrice">Price (per night):</label>
-            <input type="number" id="roomPrice" value="XXX">
+            <input type="number" id="roomPrice" placeholder="₹ XXX /-">
             
             <label for="quantity">Quantity (Nights):</label>
             <input type="number" id="quantity" value="1">
@@ -260,18 +260,14 @@
                 <div class="invoice-logo">
                     <img src="Logo.png" alt="Shree Vilas Palace" class="logo">
                 </div>
-                <div class="invoice-title">
-                    <p>SHREE VILAS PALACE</p>
-                    <p>GUEST HOUSE</p>
-                </div>
             </div>
 
             <div class="invoice-details">
                 <p><strong>INVOICE NO: <span id="displayInvoiceNo"></span></strong></p>
                 <hr>
                 <div class="issued-info">
-                    <p><strong>ISSUED TO: </strong></p>
-                    <p id="displayIssuedTo">Mr./ Mrs. </p>
+                    <p><strong>ISSUED TO: </strong></p><br>
+                    <p id="displayIssuedTo"> </p>
                     <div class="date-info">
                         <p>Issued Date:</p>
                         <p id="displayIssuedDate"> --/--/---- </p>
@@ -303,7 +299,7 @@
             <div class="watermark">
                 <img src="Logo.png" alt="Shree Vilas Palace Guest House Watermark">
             </div>
-
+<br><br><br><br><br><br>
             <div class="payment-section">
                 <div class="payment-summary">
                     <div class="subtotal">
@@ -325,8 +321,7 @@
             </div>
 
             <div class="footer">
-                <p>A. 12/02 RAJGHAT, VARANASI</p>
-                <p>THANK YOU FOR STAYING !!</p>
+                <p><strong>A. 12/02 RAJGHAT, VARANASI</strong>strong></p><br><br><br>
                 <div class="qr-code-section">
                     <img src="QR.jpeg" alt="Payment Code" class="qr-code">
                     <p>Wishing you a joyfull Experience 😊</p>
