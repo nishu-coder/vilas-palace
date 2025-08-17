@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #fff; /* Updated background to match logo theme */
             margin: 0;
             padding: 20px;
             display: flex;
@@ -92,22 +92,34 @@
         .input-form button {
             width: 100%;
             padding: 10px;
-            background-color: #007BFF;
+            background-color: #A32B2B; /* Updated button color to match logo */
             color: white;
             border: none;
-            border-radius: 8px; /* Rounded corners */
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
-            font-weight: bold; /* Bold text */
+            font-weight: bold;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 5px; /* Spacing between icon and text */
+            gap: 5px;
         }
 
         .input-form button:hover {
-            background-color: #0056b3;
+            background-color: #8C2525; /* Darker hover color */
+        }
+        
+        #addItemBtn {
+            font-size: 2em;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            margin: 10px auto;
         }
 
         .invoice-container {
@@ -292,7 +304,7 @@
             <div id="items-container" style="display: none;">
                 </div>
             
-            <button id="addItemBtn" onclick="addItem()" style="display: none;">Add Another Item</button>
+            <button id="addItemBtn" onclick="addItem()" style="display: none;">+</button>
 
             <div class="total-display">
                 <p>Calculated Total: ₹<span id="calculatedTotal">000 /-</span></p>
@@ -560,7 +572,6 @@
         }
 
         window.onload = function() {
-            // Set up initial state
             toggleItemInput('default');
         }
     </script>
