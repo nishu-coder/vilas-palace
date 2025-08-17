@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Generator</title>
     <link rel="icon" type="image/x-icon" href="Logo.png">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -327,9 +326,27 @@
         }
 
         @media print {
-            body { background-color: #fff; }
-            .input-form { display: none; }
-            .invoice-container { box-shadow: none; border: none; margin: 0; width: 100%; min-height: auto; }
+            body { 
+                background-color: #fff; 
+            }
+            .input-form,
+            .action-buttons {
+                display: none;
+            }
+            .main-container {
+                display: block;
+            }
+            .invoice-container { 
+                box-shadow: none; 
+                border: none; 
+                margin: 0; 
+                width: 100%; 
+                min-height: auto; 
+                padding: 10mm;
+            }
+            .qr-code-section {
+                display: none !important;
+            }
         }
     </style>
 </head>
