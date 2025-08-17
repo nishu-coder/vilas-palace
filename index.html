@@ -1,414 +1,408 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Generator</title>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator</title>
+    <link rel="icon" type="image/x-icon" href="Logo.png">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
 
-        .main-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-            max-width: 1200px;
-        }
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+        }
 
-        .input-form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            flex: 1 1 300px;
-            margin-right: 20px;
-        }
+        .input-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 1 1 300px;
+            margin-right: 20px;
+        }
 
-        .input-form h2 {
-            margin-top: 0;
-        }
+        .input-form h2 {
+            margin-top: 0;
+        }
 
-        .input-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+        .input-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
-        .input-form input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+        .input-form input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-        .total-display {
-            margin-top: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-align: right;
-        }
+        .total-display {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: right;
+        }
 
-        .input-form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+        .input-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-        .input-form button:hover {
-            background-color: #0056b3;
-        }
+        .input-form button:hover {
+            background-color: #0056b3;
+        }
 
-        .invoice-container {
-            width: 210mm;
-            min-height: 297mm;
-            background-color: #fff;
-            padding: 20mm;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            box-sizing: border-box;
-            flex: 2 1 500px;
-        }
+        .invoice-container {
+            width: 210mm;
+            min-height: 297mm;
+            background-color: #fff;
+            padding: 20mm;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            box-sizing: border-box;
+            flex: 2 1 500px;
+        }
 
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center; /* This centers the items vertically */
-            margin-bottom: 20px;
-        }
-        
-        .invoice-header .logo-container {
-            width: 100px;
-        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* This centers the items vertically */
+            margin-bottom: 20px;
+        }
+        
+        .invoice-header .logo-container {
+            width: 100px;
+        }
 
-        .logo {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin-left: auto;
-        }
+        .logo {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-left: auto;
+        }
 
-        .invoice-details {
-            margin-bottom: 20px;
-        }
+        .invoice-details {
+            margin-bottom: 20px;
+        }
 
-        .invoice-details p {
-            margin: 0;
-        }
+        .invoice-details p {
+            margin: 0;
+        }
 
-        hr {
-            border: none;
-            border-top: 2px solid #333;
-            margin: 10px 0;
-        }
+        hr {
+            border: none;
+            border-top: 2px solid #333;
+            margin: 10px 0;
+        }
 
-        .issued-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
+        .issued-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
 
-        .issued-info .issued-to-details {
-            flex-grow: 1;
-        }
-        
-        .issued-info .date-info {
-            text-align: right;
-        }
+        .issued-info .issued-to-details {
+            flex-grow: 1;
+        }
+        
+        .issued-info .date-info {
+            text-align: right;
+        }
 
-        .invoice-table {
-            margin-top: 20px;
-            margin-bottom: 50px;
-        }
+        .invoice-table {
+            margin-top: 20px;
+            margin-bottom: 50px;
+        }
 
-        .invoice-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .invoice-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-        .invoice-table th, .invoice-table td {
-            border-bottom: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
+        .invoice-table th, .invoice-table td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-        .invoice-table th {
-            background-color: #f2f2f2;
-        }
+        .invoice-table th {
+            background-color: #f2f2f2;
+        }
 
-        .watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            opacity: 0.1;
-            z-index: 0;
-        }
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            opacity: 0.1;
+            z-index: 0;
+        }
 
-        .watermark img {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin: auto;
-        }
+        .watermark img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: auto;
+        }
 
-        .payment-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-top: 20px;
-        }
+        .payment-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 20px;
+        }
 
-        .payment-summary {
-            flex-basis: 35%;
-            text-align: right;
-            border-left: 1px solid #ddd;
-            padding-left: 20px;
-        }
+        .payment-summary {
+            flex-basis: 35%;
+            text-align: right;
+            border-left: 1px solid #ddd;
+            padding-left: 20px;
+        }
 
-        .subtotal, .total {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
+        .subtotal, .total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
 
-        .total p {
-            font-size: 1.2em;
-        }
+        .total p {
+            font-size: 1.2em;
+        }
 
-        .bank-details {
-            flex-basis: 60%;
-        }
+        .bank-details {
+            flex-basis: 60%;
+        }
 
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 0.9em;
-        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9em;
+        }
 
-        .qr-code-section {
-            margin-top: 20px;
-        }
+        .qr-code-section {
+            margin-top: 20px;
+        }
 
-        .qr-code {
-            width: 150px;
-            height: auto;
-        }
+        .qr-code {
+            width: 150px;
+            height: auto;
+        }
 
-        @media print {
-            body {
-                background-color: #fff;
-            }
-            .input-form {
-                display: none;
-            }
-            .invoice-container {
-                box-shadow: none;
-                border: none;
-                margin: 0;
-                width: 100%;
-                min-height: auto;
-            }
-        }
-    </style>
+        @media print {
+            body {
+                background-color: #fff;
+            }
+            .input-form {
+                display: none;
+            }
+            .invoice-container {
+                box-shadow: none;
+                border: none;
+                margin: 0;
+                width: 100%;
+                min-height: auto;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <div class="input-form">
-            <h2>Enter Details</h2>
-            <label for="invoiceNumber">Invoice Number:</label>
-            <input type="text" id="invoiceNumber" placeholder="00001">
+    <div class="main-container">
+        <div class="input-form">
+            <h2>Enter Details</h2>
+            <label for="invoiceNumber">Invoice Number:</label>
+            <input type="text" id="invoiceNumber" placeholder="00001">
 
-            <label for="issuedDate">Issued Date:</label>
-            <input type="date" id="issuedDate">
+            <label for="issuedDate">Issued Date:</label>
+            <input type="date" id="issuedDate">
 
-            <label for="issuedTo">Issued To:</label>
-            <input type="text" id="issuedTo" placeholder="Mr./ Mrs. ">
-            
-            <label for="roomPrice">Price (per night):</label>
-            <input type="number" id="roomPrice" placeholder="₹ 💰💰💰 /-">
-            
-            <label for="quantity">Quantity (Nights):</label>
-            <input type="number" id="quantity" value="1">
-            
-            <div class="total-display">
-                <p>Calculated Total: ₹<span id="calculatedTotal">000 /-</span></p>
-            </div>
-            
-            <button onclick="generateInvoice()">Generate Bill 💰</button>
-            <button onclick="shareScreenshot()">Share Screenshot 📷</button>
-        </div>
+            <label for="issuedTo">Issued To:</label>
+            <input type="text" id="issuedTo" placeholder="Mr./ Mrs. ">
+            
+            <label for="roomPrice">Price (per night):</label>
+            <input type="number" id="roomPrice" placeholder="₹ 💰💰💰 /-">
+            
+            <label for="quantity">Quantity (Nights):</label>
+            <input type="number" id="quantity" placeholder="1">
+            
+            <div class="total-display">
+                <p>Calculated Total: ₹<span id="calculatedTotal">000 /-</span></p>
+            </div>
+            
+            <button onclick="generateInvoice()">Generate Bill 💰</button>
+            <button onclick="shareScreenshot()">Share Screenshot 📷</button>
+        </div>
 
-        <div class="invoice-container" id="invoice-bill">
-            <div class="invoice-header">
-                <p><strong>INVOICE NO. </strong><span id="displayInvoiceNo"></span></p>
-                <div class="logo-container">
-                    <img src="Logo.png" alt="Shree Vilas Palace" class="logo">
-                </div>
-            </div>
+        <div class="invoice-container" id="invoice-bill">
+            <div class="invoice-header">
+                <p><strong>INVOICE NO. </strong><span id="displayInvoiceNo"></span></p>
+                <div class="logo-container">
+                    <img src="Logo.png" alt="Shree Vilas Palace" class="logo">
+                </div>
+            </div>
 
-            <hr>
+            <hr>
 
-            <div class="issued-info">
-                <div class="issued-to-details">
-                    <p><strong>ISSUED TO: </strong></p><br>
-                    <p id="displayIssuedTo"></p>
-                </div>
-                <div class="date-info">
-                    <p><strong>Issued Date:</strong></p>
-                    <p id="displayIssuedDate">--/--/----</p>
-                </div>
-            </div>
+            <div class="issued-info">
+                <div class="issued-to-details">
+                    <p><strong>ISSUED TO: </strong></p><br>
+                    <p id="displayIssuedTo"></p>
+                </div>
+                <div class="date-info">
+                    <p><strong>Issued Date:</strong></p>
+                    <p id="displayIssuedDate">--/--/----</p>
+                </div>
+            </div>
 
-            <div class="invoice-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>DESCRIPTION</th>
-                            <th>QTY</th>
-                            <th>PRICE</th>
-                            <th>TOTAL</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Single Room with Double Bed</td>
-                            <td id="displayQty">1</td>
-                            <td id="displayPrice">₹ -- /-</td>
-                            <td id="displayTotal">₹ -- /-</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="watermark">
-                <img src="Logo.png" alt="Shree Vilas Palace">
-            </div>
-            <br><br><br><br><br><br><br><br>
+            <div class="invoice-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DESCRIPTION</th>
+                            <th>QTY</th>
+                            <th>PRICE</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Single Room with Double Bed</td>
+                            <td id="displayQty">1</td>
+                            <td id="displayPrice">₹ -- /-</td>
+                            <td id="displayTotal">₹ -- /-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="watermark">
+                <img src="Logo.png" alt="Shree Vilas Palace">
+            </div>
+            <br><br><br><br><br><br><br><br>
 
-            <div class="payment-section">
-                <div class="bank-details">
-                    <p><strong>PAYMENT TO:</strong></p>
-                    <p>SBI Bank</p>
-                    <p><strong>Account No. :</strong> xxxxxxxx2182</p>
-                    <p><strong>Account Name :</strong> Nishant Jaiswal</p>
-                </div>
-                <div class="payment-summary">
-                    <div class="subtotal">
-                        <p>Subtotal</p>
-                        <p>₹ <span id="displaySubtotal"></span></p>
-                    </div>
-                    <div class="total">
-                        <p><strong>Total</strong></p>
-                        <p><strong>₹ <span id="displayFinalTotal"></span>/-</strong></p>
-                    </div>
-                </div>
-            </div>
+            <div class="payment-section">
+                <div class="bank-details">
+                    <p><strong>PAYMENT TO:</strong></p>
+                    <p>SBI Bank</p>
+                    <p><strong>Account No. :</strong> xxxxxxxx2182</p>
+                    <p><strong>Account Name :</strong> Nishant Jaiswal</p>
+                </div>
+                <div class="payment-summary">
+                    <div class="subtotal">
+                        <p>Subtotal</p>
+                        <p>₹ <span id="displaySubtotal"></span></p>
+                    </div>
+                    <div class="total">
+                        <p><strong>Total</strong></p>
+                        <p><strong>₹ <span id="displayFinalTotal"></span>/-</strong></p>
+                    </div>
+                </div>
+            </div>
 
-            <div class="footer">
-                <p><strong>A. 12/02 RAJGHAT, VARANASI</strong></p><br><br><br>
-                <div class="qr-code-section">
-                    <img src="QR.jpeg" alt="Payment Code" class="qr-code">
-                    <p>Wishing you a joyfull Experience 😊</p>
-                </div>
-            </div>
-        </div>
-    </div>
+            <div class="footer">
+                <p><strong>A. 12/02 RAJGHAT, VARANASI</strong></p><br><br><br>
+                <div class="qr-code-section">
+                    <img src="QR.jpeg" alt="Payment Code" class="qr-code">
+                    <p>Wishing you a joyfull Experience 😊</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        function generateInvoice() {
-            const invoiceNumber = document.getElementById('invoiceNumber').value;
-            const issuedDateInput = document.getElementById('issuedDate').value;
-            const issuedTo = document.getElementById('issuedTo').value;
-            const roomPrice = parseFloat(document.getElementById('roomPrice').value);
-            const quantity = parseInt(document.getElementById('quantity').value);
+    <script>
+        function generateInvoice() {
+            const invoiceNumber = document.getElementById('invoiceNumber').value || '';
+            const issuedDateInput = document.getElementById('issuedDate').value;
+            const issuedTo = document.getElementById('issuedTo').value || '';
+            const roomPrice = parseFloat(document.getElementById('roomPrice').value) || 0;
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
 
-            // Calculate total
-            const total = roomPrice * quantity;
+            const total = roomPrice * quantity;
 
-            // Update invoice fields
-            document.getElementById('displayInvoiceNo').textContent = invoiceNumber;
-            document.getElementById('displayIssuedTo').textContent = issuedTo;
-            
-            // Format date for display
-            const date = new Date(issuedDateInput);
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('displayIssuedDate').textContent = date.toLocaleDateString('en-US', options);
+            document.getElementById('displayInvoiceNo').textContent = invoiceNumber;
+            document.getElementById('displayIssuedTo').textContent = issuedTo;
+            
+            if (issuedDateInput) {
+                const date = new Date(issuedDateInput);
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('displayIssuedDate').textContent = date.toLocaleDateString('en-US', options);
+            } else {
+                 document.getElementById('displayIssuedDate').textContent = '--/--/----';
+            }
 
-            document.getElementById('displayQty').textContent = quantity;
-            document.getElementById('displayPrice').textContent = `₹ ${roomPrice.toFixed(0)} /-`;
-            document.getElementById('displayTotal').textContent = `₹ ${total.toFixed(0)} /-`;
-            document.getElementById('displaySubtotal').textContent = total.toFixed(0);
-            document.getElementById('displayFinalTotal').textContent = total.toFixed(0);
-            
-            // Update calculated total on the form
-            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
-        }
+            document.getElementById('displayQty').textContent = quantity;
+            document.getElementById('displayPrice').textContent = `₹ ${roomPrice.toFixed(0)} /-`;
+            document.getElementById('displayTotal').textContent = `₹ ${total.toFixed(0)} /-`;
+            document.getElementById('displaySubtotal').textContent = total.toFixed(0);
+            document.getElementById('displayFinalTotal').textContent = total.toFixed(0);
+            
+            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
+        }
 
-        // Function to take and share a screenshot
-        function shareScreenshot() {
-            const invoiceElement = document.getElementById('invoice-bill');
-            const qrCodeSection = invoiceElement.querySelector('.qr-code-section');
-            const footerText = invoiceElement.querySelector('.footer p');
+        function shareScreenshot() {
+            const invoiceElement = document.getElementById('invoice-bill');
+            const qrCodeSection = invoiceElement.querySelector('.qr-code-section');
+            const footer = invoiceElement.querySelector('.footer');
 
-            // Temporarily hide the QR code and the footer text
-            const originalQRDisplay = qrCodeSection.style.display;
-            const originalFooterDisplay = footerText.style.display;
-            qrCodeSection.style.display = 'none';
-            footerText.style.display = 'none';
-           
-            // Use a slight delay to ensure the elements are hidden before capture
-            setTimeout(() => {
-                html2canvas(invoiceElement).then(canvas => {
-                    // Create a temporary link to download the image
-                    const link = document.createElement('a');
-                    link.download = 'invoice.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                });
-            
-                // Restore the hidden elements after a short delay
-                setTimeout(() => {
-                    qrCodeSection.style.display = originalQRDisplay;
-                    footerText.style.display = originalFooterDisplay;
-                }, 500);
+            const originalQRDisplay = qrCodeSection.style.display;
+            const originalFooterDisplay = footer.style.display;
+            qrCodeSection.style.display = 'none';
+            footer.style.display = 'none';
+            
+            setTimeout(() => {
+                html2canvas(invoiceElement).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'invoice.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            
+                setTimeout(() => {
+                    qrCodeSection.style.display = originalQRDisplay;
+                    footer.style.display = originalFooterDisplay;
+                }, 500);
 
-            }, 100);
-        }
+            }, 100);
+        }
 
-        // Add event listeners to input fields for real-time calculation
-        document.getElementById('roomPrice').addEventListener('input', updateCalculatedTotal);
-        document.getElementById('quantity').addEventListener('input', updateCalculatedTotal);
+        document.getElementById('roomPrice').addEventListener('input', updateCalculatedTotal);
+        document.getElementById('quantity').addEventListener('input', updateCalculatedTotal);
 
-        function updateCalculatedTotal() {
-            const roomPrice = parseFloat(document.getElementById('roomPrice').value) || 0;
-            const quantity = parseInt(document.getElementById('quantity').value) || 0;
-            const total = roomPrice * quantity;
-            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
-        }
+        function updateCalculatedTotal() {
+            const roomPrice = parseFloat(document.getElementById('roomPrice').value) || 0;
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const total = roomPrice * quantity;
+            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
+        }
 
-        // Initial calculation on page load
-        window.onload = function() {
-            updateCalculatedTotal();
-        }
-    </script>
+        window.onload = function() {
+            updateCalculatedTotal();
+        }
+    </script>
 </body>
 </html>
