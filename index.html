@@ -88,7 +88,7 @@
         .invoice-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center; /* This centers the items vertically */
             margin-bottom: 20px;
         }
         
@@ -249,15 +249,16 @@
             <input type="number" id="quantity" value="1">
             
             <div class="total-display">
-                <p>Calculated Total: ₹<span id="calculatedTotal"></span></p>
+                <p>Calculated Total: ₹<span id="calculatedTotal">000 /-</span></p>
             </div>
             
             <button onclick="generateInvoice()">Generate Bill 💰</button>
+            <button onclick="shareBill()">Share Bill 🔗</button>
         </div>
 
         <div class="invoice-container" id="invoice-bill">
             <div class="invoice-header">
-                <p>INVOICE NO. <span id="displayInvoiceNo"></span></p>
+                <p><strong>INVOICE NO. </strong><span id="displayInvoiceNo"></span></p>
                 <div class="logo-container">
                     <img src="Logo.png" alt="Shree Vilas Palace" class="logo">
                 </div>
@@ -359,9 +360,6 @@
             
             // Update calculated total on the form
             document.getElementById('calculatedTotal').textContent = total.toFixed(0);
-
-            // Trigger print dialog
-            window.print();
         }
 
         // Add event listeners to input fields for real-time calculation
@@ -378,6 +376,34 @@
         // Initial calculation on page load
         window.onload = function() {
             updateCalculatedTotal();
+        }
+    function shareBill() {
+        const invoiceBill = document.getElementById('invoice-bill');
+        const qrSection = invoiceBill.querySelector('.qr-code-section');
+
+                // Temporarily hide the QR code section
+                qrSection.style.display = 'none';
+
+                // Get the invoice content
+                const invoiceContent = invoiceBill.innerText;
+            
+                // Use Web Share API
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Invoice from Shree Vilas Palace',
+                        text: invoiceContent
+                    })
+                    .then(() => console.log('Successful share'))
+                    .catch((error) => console.log('Error sharing', error));
+                } else {
+                    alert("Web Share API is not supported in this browser. You can copy the invoice details manually.");
+                    console.log("Web Share API not supported.");
+                }
+            
+                // Show the QR code section again after a short delay
+                setTimeout(() => {
+                    qrSection.style.display = '';
+                }, 5000);
         }
     </script>
 </body>
