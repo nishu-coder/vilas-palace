@@ -8,313 +8,52 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .main-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .input-form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            flex: 1 1 300px;
-            margin-right: 20px;
-        }
-
-        .input-form h2 {
-            margin-top: 0;
-        }
-
-        .input-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .input-form input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .item-input {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            border: 1px dashed #ccc;
-            padding: 10px;
-            margin-bottom: 15px;
-        }
-
-        .item-input-group {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .item-input-group input {
-            width: 100%;
-            margin-bottom: 0;
-        }
-
-        .remove-item {
-            cursor: pointer;
-            color: red;
-            font-weight: bold;
-            font-size: 1.2em;
-            text-align: right;
-        }
-
-        .total-display {
-            margin-top: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .input-form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #A32B2B;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .input-form button:hover {
-            background-color: #8C2525;
-        }
-        
-        #addItemBtn {
-            font-size: 2em;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            padding: 0;
-            margin: 10px auto;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .rotate-icon {
-            transform: rotate(45deg);
-        }
-
-        .icon-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #editBtn {
-            width: 30px;
-            height: 30px;
-            font-size: 1em;
-            padding: 0;
-            border-radius: 50%;
-            background-color: #A32B2B;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .icon-group {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .invoice-container {
-            width: 210mm;
-            min-height: 297mm;
-            background-color: #fff;
-            padding: 20mm;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            box-sizing: border-box;
-            flex: 2 1 500px;
-        }
-
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .invoice-header .logo-container {
-            width: 100px;
-        }
-
-        .logo {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin-left: auto;
-        }
-
-        .invoice-details {
-            margin-bottom: 20px;
-        }
-
-        .invoice-details p {
-            margin: 0;
-        }
-
-        hr {
-            border: none;
-            border-top: 2px solid #333;
-            margin: 10px 0;
-        }
-
-        .issued-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .issued-info .issued-to-details {
-            flex-grow: 1;
-        }
-        
-        .issued-info .date-info {
-            text-align: right;
-        }
-
-        .invoice-table {
-            margin-top: 20px;
-            margin-bottom: 50px;
-        }
-
-        .invoice-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .invoice-table th, .invoice-table td {
-            border-bottom: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .invoice-table th {
-            background-color: #f2f2f2;
-        }
-
-        .watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            opacity: 0.1;
-            z-index: 0;
-        }
-
-        .watermark img {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin: auto;
-        }
-
-        .payment-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-top: 20px;
-        }
-
-        .payment-summary {
-            flex-basis: 35%;
-            text-align: right;
-            border-left: 1px solid #ddd;
-            padding-left: 20px;
-        }
-
-        .subtotal, .total {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-
-        .total p {
-            font-size: 1.2em;
-        }
-
-        .bank-details {
-            flex-basis: 60%;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 0.9em;
-        }
-
-        .qr-code-section {
-            margin-top: 20px;
-        }
-
-        .qr-code {
-            width: 150px;
-            height: auto;
-        }
-
-        @media print {
-            body {
-                background-color: #fff;
-            }
-            .input-form {
-                display: none;
-            }
-            .invoice-container {
-                box-shadow: none;
-                border: none;
-                margin: 0;
-                width: 100%;
-                min-height: auto;
-            }
-        }
+        body { font-family: Arial, sans-serif; background-color: #fff; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
+        .main-container { display: flex; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 1200px; }
+        .input-form { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); flex: 1 1 300px; margin-right: 20px; }
+        .input-form h2 { margin-top: 0; }
+        .input-form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .input-form input { width: calc(100% - 20px); padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+        .item-input { display: flex; flex-direction: column; gap: 10px; border: 1px dashed #ccc; padding: 10px; margin-bottom: 15px; }
+        .item-input-group { display: flex; justify-content: space-between; gap: 10px; }
+        .item-input-group input { width: 100%; margin-bottom: 0; }
+        .remove-item { cursor: pointer; color: red; font-weight: bold; font-size: 1.2em; text-align: right; }
+        .total-display { margin-top: 20px; font-size: 1.2em; font-weight: bold; text-align: center; }
+        .input-form button { width: 100%; padding: 10px; background-color: #A32B2B; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 10px; font-weight: bold; display: flex; justify-content: center; align-items: center; gap: 5px; transition: transform 0.3s ease-in-out; }
+        .input-form button:hover { background-color: #8C2525; }
+        #addItemBtn { font-size: 2em; width: 30px; height: 30px; border-radius: 50%; padding: 0; margin: 10px auto; transition: transform 0.3s ease-in-out; display: block; }
+        .rotate-icon { transform: rotate(45deg); }
+        .icon-btn { width: 30px; height: 30px; border-radius: 50%; padding: 0; display: flex; justify-content: center; align-items: center; }
+        #editBtn { width: 30px; height: 30px; font-size: 1em; padding: 0; border-radius: 50%; background-color: #A32B2B; color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .icon-group { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; margin-bottom: 10px; }
+        .invoice-container { width: 210mm; min-height: 297mm; background-color: #fff; padding: 20mm; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); position: relative; box-sizing: border-box; flex: 2 1 500px; }
+        .invoice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .invoice-header .logo-container { width: 100px; }
+        .logo { width: 100%; height: auto; display: block; margin-left: auto; }
+        .invoice-details { margin-bottom: 20px; }
+        .invoice-details p { margin: 0; }
+        hr { border: none; border-top: 2px solid #333; margin: 10px 0; }
+        .issued-info { display: flex; justify-content: space-between; align-items: flex-start; }
+        .issued-info .issued-to-details { flex-grow: 1; }
+        .issued-info .date-info { text-align: right; }
+        .invoice-table { margin-top: 20px; margin-bottom: 50px; }
+        .invoice-table table { width: 100%; border-collapse: collapse; }
+        .invoice-table th, .invoice-table td { border-bottom: 1px solid #ddd; padding: 8px; text-align: left; }
+        .invoice-table th { background-color: #f2f2f2; }
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; opacity: 0.1; z-index: 0; }
+        .watermark img { width: 100%; height: auto; display: block; margin: auto; }
+        .payment-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px; }
+        .payment-summary { flex-basis: 35%; text-align: right; border-left: 1px solid #ddd; padding-left: 20px; }
+        .subtotal, .total { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .total p { font-size: 1.2em; }
+        .bank-details { flex-basis: 60%; }
+        .footer { text-align: center; margin-top: 50px; font-size: 0.9em; }
+        .qr-code-section { margin-top: 20px; }
+        .qr-code { width: 150px; height: auto; }
+        @media print { body { background-color: #fff; } .input-form { display: none; } .invoice-container { box-shadow: none; border: none; margin: 0; width: 100%; min-height: auto; } }
     </style>
 </head>
 <body>
-
     <div class="main-container">
         <div class="input-form">
             <h2>Enter Details</h2>
@@ -335,18 +74,19 @@
                 <input type="number" id="defaultQuantity" placeholder="1">
             </div>
 
-            <div id="items-container" style="display: none;">
-                </div>
+            <div id="items-container" style="display: none;"></div>
             
+            <button id="addItemBtn" onclick="toggleItemInput('toggle')">+</button>
+
             <div id="icon-group" class="icon-group" style="display: none;">
-                <button id="addItemBtn" onclick="toggleItemInput('toggle')">+</button>
                 <button id="editBtn" onclick="toggleItemInput('default')">
                     <i class="fas fa-trash-alt"></i>
                 </button>
-                <button class="icon-btn" onclick="shareScreenshot()">
-                    <i class="fas fa-share-alt"></i>
-                </button>
             </div>
+            <br>
+            <button class="icon-btn" onclick="shareScreenshot()" style="display: block;">
+                <i class="fas fa-share-alt"></i>
+            </button>
 
             <div class="total-display">
                 <p>Calculated Total: ₹<span id="calculatedTotal">000 /-</span></p>
@@ -386,8 +126,7 @@
                             <th>TOTAL</th>
                         </tr>
                     </thead>
-                    <tbody id="invoice-items">
-                        </tbody>
+                    <tbody id="invoice-items"></tbody>
                 </table>
             </div>
             
@@ -417,198 +156,16 @@
 
             <div class="footer">
                 <p><strong>A. 12/02 RAJGHAT, VARANASI</strong></p>
-                <p><strong>Wishing you a joyfull Experience 😊</strong></p>
-            </div>
+                <p>Wishing you a joyfull Experience 😊</p>
                 <br><br><br>
-            <div class="qr-code-section">
-                <img src="QR.jpeg" alt="Payment Code" class="qr-code">
+                <div class="qr-code-section">
+                    <img src="QR.jpeg" alt="Payment Code" class="qr-code">
+                </div>
             </div>
         </div>
     </div>
     <script>
-        let itemCounter = 0;
-        let isDefaultMode = true;
-
-        function toggleItemInput(type) {
-            const defaultContainer = document.getElementById('default-item-container');
-            const itemsContainer = document.getElementById('items-container');
-            const iconGroup = document.getElementById('icon-group');
-            const addItemBtn = document.getElementById('addItemBtn');
-
-            if (type === 'multiple' || (type === 'toggle' && isDefaultMode)) {
-                isDefaultMode = false;
-                defaultContainer.style.display = 'none';
-                itemsContainer.style.display = 'block';
-                iconGroup.style.display = 'flex';
-                addItemBtn.classList.add('rotate-icon');
-                if (itemsContainer.children.length === 0) {
-                    addItem();
-                }
-            } else if (type === 'default' || (type === 'toggle' && !isDefaultMode)) {
-                isDefaultMode = true;
-                defaultContainer.style.display = 'block';
-                itemsContainer.style.display = 'none';
-                itemsContainer.innerHTML = '';
-                iconGroup.style.display = 'none';
-                addItemBtn.classList.remove('rotate-icon');
-                itemCounter = 0;
-            }
-            updateCalculatedTotal();
-        }
-
-        function addItem() {
-            itemCounter++;
-            const itemsContainer = document.getElementById('items-container');
-            const newItemDiv = document.createElement('div');
-            newItemDiv.className = 'item-input';
-            newItemDiv.dataset.itemId = itemCounter;
-            newItemDiv.innerHTML = `
-                <span class="remove-item" onclick="removeItem(this)">x</span>
-                <label>Item #${itemCounter}</label>
-                <input type="text" class="item-description" placeholder="Item Description">
-                <div class="item-input-group">
-                    <input type="number" class="item-price" placeholder="Price">
-                    <input type="number" class="item-quantity" placeholder="Qty">
-                </div>
-            `;
-            itemsContainer.appendChild(newItemDiv);
-            document.querySelectorAll('.item-price, .item-quantity').forEach(input => {
-                input.addEventListener('input', updateCalculatedTotal);
-            });
-        }
-
-        function removeItem(element) {
-            const itemDiv = element.closest('.item-input');
-            itemDiv.remove();
-            updateCalculatedTotal();
-        }
-
-        function updateCalculatedTotal() {
-            let total = 0;
-            if (isDefaultMode) {
-                const price = parseFloat(document.getElementById('defaultRoomPrice').value) || 0;
-                const quantity = parseInt(document.getElementById('defaultQuantity').value) || 0;
-                total = price * quantity;
-            } else {
-                const items = document.querySelectorAll('.item-input');
-                items.forEach(item => {
-                    const price = parseFloat(item.querySelector('.item-price').value) || 0;
-                    const quantity = parseInt(item.querySelector('.item-quantity').value) || 0;
-                    total += price * quantity;
-                });
-            }
-            document.getElementById('calculatedTotal').textContent = total.toFixed(0);
-        }
-
-        function generateInvoice() {
-            const invoiceNumber = document.getElementById('invoiceNumber').value || '';
-            const issuedDateInput = document.getElementById('issuedDate').value;
-            const issuedTo = document.getElementById('issuedTo').value || '';
-
-            const invoiceItemsTable = document.getElementById('invoice-items');
-            invoiceItemsTable.innerHTML = '';
-            
-            let finalTotal = 0;
-
-            if (isDefaultMode) {
-                const description = "Specious Room (2X Beds)";
-                const price = parseFloat(document.getElementById('defaultRoomPrice').value) || 0;
-                const quantity = parseInt(document.getElementById('defaultQuantity').value) || 0;
-                finalTotal = price * quantity;
-
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${description}</td>
-                    <td>${quantity}</td>
-                    <td>₹ ${price.toFixed(0)} /-</td>
-                    <td>₹ ${finalTotal.toFixed(0)} /-</td>
-                `;
-                invoiceItemsTable.appendChild(newRow);
-
-            } else {
-                const items = document.querySelectorAll('.item-input');
-                items.forEach(item => {
-                    const description = item.querySelector('.item-description').value || 'Service/Item';
-                    const price = parseFloat(item.querySelector('.item-price').value) || 0;
-                    const quantity = parseInt(item.querySelector('.item-quantity').value) || 0;
-                    const itemTotal = price * quantity;
-                    finalTotal += itemTotal;
-
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>${description}</td>
-                        <td>${quantity}</td>
-                        <td>₹ ${price.toFixed(0)} /-</td>
-                        <td>₹ ${itemTotal.toFixed(0)} /-</td>
-                    `;
-                    invoiceItemsTable.appendChild(newRow);
-                });
-            }
-
-            document.getElementById('displayInvoiceNo').textContent = invoiceNumber;
-            document.getElementById('displayIssuedTo').textContent = issuedTo;
-            
-            if (issuedDateInput) {
-                const date = new Date(issuedDateInput);
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                document.getElementById('displayIssuedDate').textContent = date.toLocaleDateString('en-US', options);
-            } else {
-                 document.getElementById('displayIssuedDate').textContent = '--/--/----';
-            }
-
-            document.getElementById('displaySubtotal').textContent = finalTotal.toFixed(0);
-            document.getElementById('displayFinalTotal').textContent = finalTotal.toFixed(0);
-        }
-
-        function shareScreenshot() {
-            const invoiceElement = document.getElementById('invoice-bill');
-            const qrCodeSection = invoiceElement.querySelector('.qr-code-section');
-            
-            const originalQRDisplay = qrCodeSection.style.display;
-
-            qrCodeSection.style.display = 'none';
-
-            setTimeout(() => {
-                html2canvas(invoiceElement).then(canvas => {
-                    if (navigator.canShare) {
-                        canvas.toBlob(blob => {
-                            const filesArray = [
-                                new File([blob], 'invoice.png', {
-                                    type: 'image/png',
-                                    lastModified: new Date().getTime()
-                                })
-                            ];
-                            const shareData = {
-                                files: filesArray,
-                                title: 'Invoice',
-                                text: 'Here is your invoice from Shree Vilas Palace.',
-                            };
-                            navigator.share(shareData)
-                                .then(() => console.log('Share successful'))
-                                .catch((error) => console.log('Error sharing:', error));
-                        }, 'image/png');
-                    } else {
-                        const link = document.createElement('a');
-                        link.download = 'invoice.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                        console.log('Web Share API not supported, downloading instead.');
-                    }
-                });
-
-                setTimeout(() => {
-                    qrCodeSection.style.display = originalQRDisplay;
-                }, 500);
-
-            }, 100);
-        }
-
-        window.onload = function() {
-            toggleItemInput('default');
-            document.getElementById('defaultQuantity').value = 1;
-            document.getElementById('defaultRoomPrice').addEventListener('input', updateCalculatedTotal);
-            document.getElementById('defaultQuantity').addEventListener('input', updateCalculatedTotal);
-        }
+        let a=0;let b=true;function c(d){const e=document.getElementById("default-item-container"),f=document.getElementById("items-container"),g=document.getElementById("icon-group"),h=document.getElementById("addItemBtn");if("multiple"===d||"toggle"===d&&b){b=!1;e.style.display="none";f.style.display="block";g.style.display="flex";h.classList.add("rotate-icon");0===f.children.length&&i()}else if("default"===d||"toggle"===d&&!b){b=!0;e.style.display="block";f.style.display="none";f.innerHTML="";g.style.display="none";h.classList.remove("rotate-icon");a=0}k()}function i(){a++;const d=document.getElementById("items-container"),e=document.createElement("div");e.className="item-input";e.dataset.itemId=a;e.innerHTML=`<span class="remove-item" onclick="j(this)">x</span><label>Item #${a}</label><input type="text" class="item-description" placeholder="Item Description"><div class="item-input-group"><input type="number" class="item-price" placeholder="Price"><input type="number" class="item-quantity" placeholder="Qty"></div>`;d.appendChild(e);document.querySelectorAll(".item-price, .item-quantity").forEach(l=>{l.addEventListener("input",k)})}function j(d){d.closest(".item-input").remove();k()}function k(){let c=0;if(b){const a=parseFloat(document.getElementById("defaultRoomPrice").value)||0,d=parseInt(document.getElementById("defaultQuantity").value)||0;c=a*d}else{const a=document.querySelectorAll(".item-input");a.forEach(a=>{const d=parseFloat(a.querySelector(".item-price").value)||0,e=parseInt(a.querySelector(".item-quantity").value)||0;c+=d*e})}document.getElementById("calculatedTotal").textContent=c.toFixed(0)}function l(){const c=document.getElementById("invoiceNumber").value||"",e=document.getElementById("issuedDate").value,f=document.getElementById("issuedTo").value||"",g=document.getElementById("invoice-items");g.innerHTML="";let h=0;if(b){const a="Specious Room (2X Beds)",d=parseFloat(document.getElementById("defaultRoomPrice").value)||0,e=parseInt(document.getElementById("defaultQuantity").value)||0;h=d*e;const c=document.createElement("tr");c.innerHTML=`<td>${a}</td><td>${e}</td><td>₹ ${d.toFixed(0)} /-</td><td>₹ ${h.toFixed(0)} /-</td>`;g.appendChild(c)}else{const c=document.querySelectorAll(".item-input");c.forEach(a=>{const b=a.querySelector(".item-description").value||"Service/Item",c=parseFloat(a.querySelector(".item-price").value)||0,d=parseInt(a.querySelector(".item-quantity").value)||0,e=c*d;h+=e;const f=document.createElement("tr");f.innerHTML=`<td>${b}</td><td>${d}</td><td>₹ ${c.toFixed(0)} /-</td><td>₹ ${e.toFixed(0)} /-</td>`;g.appendChild(f)})}document.getElementById("displayInvoiceNo").textContent=c;document.getElementById("displayIssuedTo").textContent=f;e?document.getElementById("displayIssuedDate").textContent=(new Date(e)).toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"}):document.getElementById("displayIssuedDate").textContent="--/--/----";document.getElementById("displaySubtotal").textContent=h.toFixed(0);document.getElementById("displayFinalTotal").textContent=h.toFixed(0)}function m(){const a=document.getElementById("invoice-bill"),b=a.querySelector(".qr-code-section"),d=b.style.display;b.style.display="none";setTimeout(()=>{html2canvas(a).then(a=>{if(navigator.canShare){a.toBlob(c=>{const d=[new File([c],"invoice.png",{type:"image/png",lastModified:(new Date).getTime()})],e={files:d,title:"Invoice",text:"Here is your invoice from Shree Vilas Palace."};navigator.share(e).then(()=>console.log("Share successful")).catch(a=>console.log("Error sharing:",a))},"image/png")}else{const b=document.createElement("a");b.download="invoice.png";b.href=a.toDataURL("image/png");b.click();console.log("Web Share API not supported, downloading instead.")}})},100);setTimeout(()=>{b.style.display=d},500)}window.onload=function(){c("default");document.getElementById("defaultQuantity").value=1;document.getElementById("defaultRoomPrice").addEventListener("input",k);document.getElementById("defaultQuantity").addEventListener("input",k)};
     </script>
 </body>
 </html>
