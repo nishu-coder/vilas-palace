@@ -6,10 +6,11 @@
     <title>Invoice Generator</title>
     <link rel="icon" type="image/x-icon" href="Logo.png">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff; /* Updated background to match logo theme */
+            background-color: #fff;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -86,13 +87,13 @@
             margin-top: 20px;
             font-size: 1.2em;
             font-weight: bold;
-            text-align: right;
+            text-align: center; /* Centered "Calculated Total" */
         }
 
         .input-form button {
             width: 100%;
             padding: 10px;
-            background-color: #A32B2B; /* Updated button color to match logo */
+            background-color: #A32B2B;
             color: white;
             border: none;
             border-radius: 8px;
@@ -104,10 +105,11 @@
             justify-content: center;
             align-items: center;
             gap: 5px;
+            transition: transform 0.3s ease-in-out;
         }
 
         .input-form button:hover {
-            background-color: #8C2525; /* Darker hover color */
+            background-color: #8C2525;
         }
         
         #addItemBtn {
@@ -115,11 +117,23 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
+            padding: 0;
+            margin: 10px auto;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .rotate-icon {
+            transform: rotate(45deg);
+        }
+
+        .icon-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0;
-            margin: 10px auto;
         }
 
         .invoice-container {
@@ -290,10 +304,9 @@
             <label for="issuedTo">Issued To:</label>
             <input type="text" id="issuedTo" placeholder="Mr./ Mrs. ">
             
-            <button onclick="toggleItemInput('default')">Use Default Room</button>
-            <button onclick="toggleItemInput('multiple')">Add Multiple Items</button>
+            <button id="editBtn" onclick="toggleItemInput('multiple')">Edit Multiple Items</button>
 
-            <div id="default-item-container" style="display: none;">
+            <div id="default-item-container">
                 <label for="defaultRoomPrice">Price (per night):</label>
                 <input type="number" id="defaultRoomPrice" placeholder="₹ 💰💰💰 /-">
                 
@@ -304,14 +317,16 @@
             <div id="items-container" style="display: none;">
                 </div>
             
-            <button id="addItemBtn" onclick="addItem()" style="display: none;">+</button>
+            <button id="addItemBtn" onclick="toggleItemInput('toggle')">+</button>
 
             <div class="total-display">
                 <p>Calculated Total: ₹<span id="calculatedTotal">000 /-</span></p>
             </div>
             
             <button onclick="generateInvoice()">Generate Bill 💰</button>
-            <button onclick="shareScreenshot()">Share Screenshot 📷</button>
+            <button class="icon-btn" onclick="shareScreenshot()">
+                <i class="fas fa-share-alt"></i>
+            </button>
         </div>
 
         <div class="invoice-container" id="invoice-bill">
@@ -385,24 +400,43 @@
     </div>
     <script>
         let itemCounter = 0;
+        let isDefaultMode = true;
 
         function toggleItemInput(type) {
             const defaultContainer = document.getElementById('default-item-container');
             const itemsContainer = document.getElementById('items-container');
             const addItemBtn = document.getElementById('addItemBtn');
+            const editBtn = document.getElementById('editBtn');
 
-            if (type === 'default') {
-                defaultContainer.style.display = 'block';
-                itemsContainer.style.display = 'none';
-                addItemBtn.style.display = 'none';
-                itemsContainer.innerHTML = '';
-                updateDefaultEventListeners();
-            } else if (type === 'multiple') {
+            if (type === 'multiple') {
+                isDefaultMode = false;
                 defaultContainer.style.display = 'none';
                 itemsContainer.style.display = 'block';
                 addItemBtn.style.display = 'block';
+                editBtn.style.display = 'none';
+                addItemBtn.classList.add('rotate-icon');
                 if (itemsContainer.children.length === 0) {
                     addItem();
+                }
+            } else if (type === 'toggle') {
+                if (isDefaultMode) {
+                    // Switch to multiple items mode
+                    isDefaultMode = false;
+                    defaultContainer.style.display = 'none';
+                    itemsContainer.style.display = 'block';
+                    addItemBtn.classList.add('rotate-icon');
+                    editBtn.style.display = 'none';
+                    if (itemsContainer.children.length === 0) {
+                        addItem();
+                    }
+                } else {
+                    // Switch back to default mode
+                    isDefaultMode = true;
+                    defaultContainer.style.display = 'block';
+                    itemsContainer.style.display = 'none';
+                    itemsContainer.innerHTML = '';
+                    addItemBtn.classList.remove('rotate-icon');
+                    editBtn.style.display = 'block';
                 }
             }
             updateCalculatedTotal();
@@ -451,8 +485,7 @@
 
         function updateCalculatedTotal() {
             let total = 0;
-            const defaultContainer = document.getElementById('default-item-container');
-            if (defaultContainer.style.display === 'block') {
+            if (isDefaultMode) {
                 const price = parseFloat(document.getElementById('defaultRoomPrice').value) || 0;
                 const quantity = parseInt(document.getElementById('defaultQuantity').value) || 0;
                 total = price * quantity;
@@ -476,9 +509,8 @@
             invoiceItemsTable.innerHTML = '';
             
             let finalTotal = 0;
-            const defaultContainer = document.getElementById('default-item-container');
 
-            if (defaultContainer.style.display === 'block') {
+            if (isDefaultMode) {
                 const description = "Specious Room (2X Beds)";
                 const price = parseFloat(document.getElementById('defaultRoomPrice').value) || 0;
                 const quantity = parseInt(document.getElementById('defaultQuantity').value) || 0;
