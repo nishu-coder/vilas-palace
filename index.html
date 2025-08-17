@@ -583,19 +583,19 @@
             const qrCodeSection = invoiceElement.querySelector('.qr-code-section');
             
             const originalQRDisplay = qrCodeSection.style.display;
-
             qrCodeSection.style.display = 'none';
 
+            // Wait a moment for the QR code to hide, then take the screenshot
             setTimeout(() => {
                 html2canvas(invoiceElement, { scale: 2 }).then(canvas => {
-                    if (navigator.canShare && navigator.canShare({ files: [new File([''], 'invoice.png', { type: 'image/png' })] })) {
-                        canvas.toBlob(blob => {
-                            const filesArray = [
-                                new File([blob], 'invoice.png', {
-                                    type: 'image/png',
-                                    lastModified: new Date().getTime()
-                                })
-                            ];
+                    canvas.toBlob(blob => {
+                        const filesArray = [
+                            new File([blob], 'invoice.png', {
+                                type: 'image/png',
+                                lastModified: new Date().getTime()
+                            })
+                        ];
+                        if (navigator.canShare && navigator.canShare({ files: filesArray })) {
                             const shareData = {
                                 files: filesArray,
                                 title: 'Invoice',
@@ -604,16 +604,18 @@
                             navigator.share(shareData)
                                 .then(() => console.log('Share successful'))
                                 .catch((error) => console.log('Error sharing:', error));
-                        }, 'image/png');
-                    } else {
-                        const link = document.createElement('a');
-                        link.download = 'invoice.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                        console.log('Web Share API not supported, downloading instead.');
-                    }
+                        } else {
+                            // Fallback for browsers that don't support file sharing
+                            const link = document.createElement('a');
+                            link.download = 'invoice.png';
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                            console.log('Web Share API not supported, downloading instead.');
+                        }
+                    }, 'image/png');
                 });
-
+                
+                // Restore the QR code section after a short delay
                 setTimeout(() => {
                     qrCodeSection.style.display = originalQRDisplay;
                 }, 500);
